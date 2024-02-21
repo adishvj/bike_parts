@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  
 
   const CustomButton({
     Key? key,
@@ -16,10 +16,14 @@ class CustomButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.teal, 
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))// Button color
+          backgroundColor:  Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5)) // Button color
+          ),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.black),
       ),
-      child:  Text(text,style: const TextStyle(color: Colors.white),),
     );
   }
 }
