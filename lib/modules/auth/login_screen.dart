@@ -1,3 +1,6 @@
+import 'package:bike_parts/modules/auth/signup_screen.dart';
+import 'package:bike_parts/modules/user/home/user_root_screen.dart';
+import 'package:bike_parts/utils/validator.dart';
 import 'package:bike_parts/widgets/custom_button.dart';
 import 'package:bike_parts/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -18,29 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
     borderSide: const BorderSide(color: Colors.white),
   );
 
-   String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter an email';
-    }
-
-    // Regex for validating email addresses
-    final RegExp emailRegex =
-        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address';
-    }
-
-    return null;
-  }
-
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a password';
-    }
-    return null;
-  }
-
   String? emailError;
   String? passwordError;
 
@@ -54,8 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const   Color(0xffF7C910),
-     
+      backgroundColor: const Color(0xffF7C910),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -79,32 +58,22 @@ class _LoginScreenState extends State<LoginScreen> {
               errorText: emailError,
             ),
             const SizedBox(height: 30),
-            TextField(
+            CustomTextField(
+              hintText: 'Enter password',
               controller: _passwordController,
+              errorText: passwordError,
               obscureText: _obscureText,
-              decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      
-                      _obscureText ? Icons.visibility : Icons.visibility_off,
-
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                  ),
-                  hintText: 'Enter password',
-                  enabledBorder: outlineInputBorder,
-                  focusedBorder: outlineInputBorder,
-                  border: outlineInputBorder,
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(color: Colors.red),
-                  ),
-                  errorText: passwordError),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                },
+              ),
             ),
             Align(
               alignment: Alignment.centerRight,
@@ -124,22 +93,49 @@ class _LoginScreenState extends State<LoginScreen> {
               child: CustomButton(
                 text: 'Login',
                 onPressed: () {
-                  setState(() {
-                    emailError = _validateEmail(_emailController.text);
-                    passwordError = _validatePassword(_passwordController.text);
-                    if (emailError == null && passwordError == null) {
-                      // Validation passed, proceed with login
-                      // Add your login logic here
-                    } else {
-                      setState(() {});
-                    }
-                  });
+                  _loginHandler();
+                  
                 },
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Dont have an account?',
+                  style: TextStyle(color: Colors.black),
+                ),
+                TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ))
+              ],
             )
           ],
         ),
       ),
     );
+  }
+
+ void _loginHandler() {
+    setState(() {
+      emailError = validateEmail(_emailController.text);
+      passwordError = validatePassword(_passwordController.text);
+      if (emailError == null && passwordError == null) {
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => UserRootScreen(),), (route) => false);
+      } else {
+        setState(() {});
+      }
+    });
   }
 }
