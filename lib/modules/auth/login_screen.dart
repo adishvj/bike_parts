@@ -45,6 +45,13 @@ class _LoginScreenState extends State<LoginScreen> {
   String? passwordError;
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const   Color(0xffF7C910),
