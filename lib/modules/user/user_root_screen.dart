@@ -1,5 +1,7 @@
-import 'package:bike_parts/modules/user/cart/user_cart_screen.dart';
 import 'package:bike_parts/modules/user/home/user_home_screen.dart';
+import 'package:bike_parts/modules/user/profile/user_profile_screen.dart';
+import 'package:bike_parts/modules/user/spareparts/user_spare_parts_screen.dart';
+import 'package:bike_parts/modules/user/workshop/user_work_shop_screen.dart';
 import 'package:flutter/material.dart';
 
 class UserRootScreen extends StatefulWidget {
@@ -10,8 +12,6 @@ class UserRootScreen extends StatefulWidget {
 }
 
 class _UserRootScreenState extends State<UserRootScreen> {
-
-
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -22,37 +22,41 @@ class _UserRootScreenState extends State<UserRootScreen> {
 
   final _pagesList = [
     const HomeScreen(),
-    UserCartScreen()
+    const UserSparePartsScreen(),
+    const UserWorkShopScreen(),
+     UserProfileScreen()
+
+    
   ];
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body:_pagesList[_selectedIndex],
-
+      backgroundColor: Colors.grey[200],
+      body: _pagesList[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
+        selectedItemColor: const Color(0xffED1C24),
+        unselectedItemColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Cart',
+            icon: Icon(Icons.miscellaneous_services),
+            label: 'Spare parts',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.notifications),
-          //   label: 'Notifications',
-          // ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.account_circle),
-          //   label: 'Profile',
-          // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.construction),
+            label: 'Work shop',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
     );

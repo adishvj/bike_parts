@@ -5,43 +5,54 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String? errorText;
   final TextInputType? input;
-  final Widget ? suffixIcon;
-  final bool ? obscureText;
+  final Widget? suffixIcon;
+  final bool? obscureText;
+  final Color? borderColor;
+  String? Function(String?)? validator;
+  final bool? isEnabled;
 
-  const CustomTextField({
-    Key? key,
-    required this.hintText,
-    required this.controller,
-    this.input,
-    this.errorText,
-    this.suffixIcon,
-    this.obscureText
-  }) : super(key: key);
+  CustomTextField(
+      {Key? key,
+      required this.hintText,
+      required this.controller,
+      this.input,
+      this.errorText,
+      this.suffixIcon,
+      this.obscureText,
+      this.borderColor,
+      this.validator,
+      this.isEnabled
+      })
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var outlineInputBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: const BorderSide(
-        color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(
+        color: borderColor ?? Colors.white,
       ),
     );
-    return TextField(
+    return TextFormField(
       controller: controller,
+      validator: validator,
       keyboardType: input,
-      obscureText: obscureText??false,
+      obscureText: obscureText ?? false,
+      enabled: isEnabled,
       decoration: InputDecoration(
-          hintText: hintText,
-          enabledBorder: outlineInputBorder,
-          focusedBorder: outlineInputBorder,
-          border: outlineInputBorder,
-          errorText: errorText,
-          suffixIcon: suffixIcon,
-
-
-          errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: const BorderSide(color: Colors.red))),
+        hintText: hintText,
+        enabledBorder: outlineInputBorder,
+        focusedBorder: outlineInputBorder,
+        border: outlineInputBorder,
+        errorText: errorText,
+        suffixIcon: suffixIcon,
+        
+        hintStyle:TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.w400),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25.0),
+          borderSide: const BorderSide(color: Colors.red),
+        ),
+      ),
     );
   }
 }

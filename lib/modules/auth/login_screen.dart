@@ -1,5 +1,5 @@
 import 'package:bike_parts/modules/auth/signup_screen.dart';
-import 'package:bike_parts/modules/user/home/user_root_screen.dart';
+import 'package:bike_parts/modules/user/user_root_screen.dart';
 import 'package:bike_parts/utils/validator.dart';
 import 'package:bike_parts/widgets/custom_button.dart';
 import 'package:bike_parts/widgets/custom_text_field.dart';
@@ -132,9 +132,11 @@ class _LoginScreenState extends State<LoginScreen> {
       emailError = validateEmail(_emailController.text);
       passwordError = validatePassword(_passwordController.text);
       if (emailError == null && passwordError == null) {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => UserRootScreen(),), (route) => false);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const UserRootScreen(),), (route) => false);
       } else {
-        setState(() {});
+        setState(() {
+          
+        });
       }
     });
   }
