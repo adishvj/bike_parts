@@ -24,6 +24,8 @@ class UserSearchScreen extends StatelessWidget {
                 enabled: true,
                 controller: _searchController,
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
                   hintText: 'Search',
                   suffixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(

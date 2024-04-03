@@ -23,6 +23,7 @@ class PopularWorkWidget extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => UserWorkShopDetails(
                   image: partList[index],
+                  details: {},
                 ),
               ),
             );

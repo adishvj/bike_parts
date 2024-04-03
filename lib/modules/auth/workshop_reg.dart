@@ -4,14 +4,14 @@ import 'package:bike_parts/widgets/custom_button.dart';
 import 'package:bike_parts/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class WorkShopRegistrations extends StatefulWidget {
+  const WorkShopRegistrations({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<WorkShopRegistrations> createState() => _WorkShopRegistrationsState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _WorkShopRegistrationsState extends State<WorkShopRegistrations> {
   String? emailError;
   String? passwordError;
 
@@ -145,7 +145,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           });
 
 
-          await ApiService().userRegistration(
+          await ApiService().workShopRegistrations(
             context: context, name: _nameControllers.text, 
             phone: _phoneControllers.text, 
             email: _emailController.text,
