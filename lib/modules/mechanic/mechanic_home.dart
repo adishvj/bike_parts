@@ -1,4 +1,7 @@
 
+import 'package:bike_parts/modules/auth/login_screen.dart';
+import 'package:bike_parts/modules/mechanic/view_parts.dart';
+import 'package:bike_parts/services/db_service.dart';
 import 'package:flutter/material.dart';
 
 
@@ -7,10 +10,14 @@ class MechanicHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    print(DbService.getWorkshopId());
     return Scaffold(
+
+      extendBodyBehindAppBar: true,
       
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.transparent),
         title: const Text(
           'HOME',
           style: TextStyle(color: Colors.black),
@@ -20,73 +27,86 @@ class MechanicHomeScreen extends StatelessWidget {
         elevation: 0,
        
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Card(
-              color: Colors.white,
-              child: ListTile(
-                leading:
-                    const Icon(Icons.app_registration, color: Colors.black),
-                title: const Text('Add Touranament',
-                    style: TextStyle(color: Colors.black)),
-                trailing: const Icon(Icons.arrow_forward, color: Colors.black),
-                onTap: () {
-                 
-                },
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          
+          image: DecorationImage(
+            fit: BoxFit.fill,
+            image: AssetImage('assets/images/pexels-rachel-claire-4577448.jpg'))
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Card(
+                color: Colors.white,
+                child: ListTile(
+                  leading:
+                      const Icon(Icons.settings, color: Colors.black),
+                  title: const Text('View parts',
+                      style: TextStyle(color: Colors.black)),
+                  trailing: const Icon(Icons.arrow_forward, color: Colors.black),
+                  onTap: () {
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => const MechanicViewPartsScreen(),));
+                   
+                  },
+                ),
               ),
-            ),
-            Card(
-              color: Colors.white,
-              child: ListTile(
-                leading: const Icon(Icons.grass, color: Colors.black),
-                title: const Text('View turfs',
-                    style: TextStyle(color: Colors.black)),
-                trailing: const Icon(Icons.arrow_forward, color: Colors.black),
-                onTap: () {
-                  
-                },
+              Card(
+                color: Colors.white,
+                child: ListTile(
+                  leading: const Icon(Icons.grass, color: Colors.black),
+                  title: const Text('View turfs',
+                      style: TextStyle(color: Colors.black)),
+                  trailing: const Icon(Icons.arrow_forward, color: Colors.black),
+                  onTap: () {
+                    
+                  },
+                ),
               ),
-            ),
-            Card(
-              color: Colors.white,
-              child: ListTile(
-                leading: const Icon(Icons.festival, color: Colors.black),
-                title: const Text('View Tournaments',
-                    style: TextStyle(color: Colors.black)),
-                trailing: const Icon(Icons.arrow_forward, color: Colors.black),
-                onTap: () {
-                 
-                },
+              Card(
+                color: Colors.white,
+                child: ListTile(
+                  leading: const Icon(Icons.festival, color: Colors.black),
+                  title: const Text('View Tournaments',
+                      style: TextStyle(color: Colors.black)),
+                  trailing: const Icon(Icons.arrow_forward, color: Colors.black),
+                  onTap: () {
+                   
+                  },
+                ),
               ),
-            ),
-            Card(
-              color: Colors.white,
-              child: ListTile(
-                leading: const Icon(Icons.book, color: Colors.black),
-                title: const Text('Booking',
-                    style: TextStyle(color: Colors.black)),
-                trailing: const Icon(Icons.arrow_forward, color: Colors.black),
-                onTap: () {
-                 
-                },
+              Card(
+                color: Colors.white,
+                child: ListTile(
+                  leading: const Icon(Icons.book, color: Colors.black),
+                  title: const Text('Booking',
+                      style: TextStyle(color: Colors.black)),
+                  trailing: const Icon(Icons.arrow_forward, color: Colors.black),
+                  onTap: () {
+                   
+                  },
+                ),
               ),
-            ),
-            Card(
-              color: Colors.white,
-              child: ListTile(
-                leading: const Icon(Icons.logout, color: Colors.black),
-                title:
-                    const Text('Logout', style: TextStyle(color: Colors.black)),
-                trailing: const Icon(Icons.arrow_forward, color: Colors.black),
-                onTap: () {
-                  
-                },
+              Card(
+                color: Colors.white,
+                child: ListTile(
+                  leading: const Icon(Icons.logout, color: Colors.black),
+                  title:
+                      const Text('Logout', style: TextStyle(color: Colors.black)),
+                  trailing: const Icon(Icons.arrow_forward, color: Colors.black),
+                  onTap: () {
+
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen(),), (route) => false);
+                    
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

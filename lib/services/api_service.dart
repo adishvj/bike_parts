@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bike_parts/modules/auth/login_screen.dart';
 import 'package:bike_parts/modules/auth/workshop_reg.dart';
+import 'package:bike_parts/services/db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -149,11 +150,34 @@ Future<int> loginUser({required String email,required String password,required B
     },
   );
 
-  print(response.body);
+  
 
    
 
   if (response.statusCode == 200) {
+
+   var data = jsonDecode(response.body);
+
+ 
+    if(data['success'] ==  true){
+
+      DbService.setLoginId(data['loginId']);
+
+      if(data['userRole'] == 2){
+         DbService.setWorkShopId(data['workshopId']);
+
+      }
+
+
+
+      
+
+    }
+
+
+
+  
+
     // Handle successful response
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(

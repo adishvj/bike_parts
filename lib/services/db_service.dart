@@ -34,6 +34,25 @@ class DbService{
     return prefs!.getString('userid');
   }
 
+  static void setWorkShopId(String id) {
+
+      prefs!.setString('workshopId', id);
+  }
+
+  static String? getWorkshopId(){
+
+    return prefs!.getString('workshopId');
+  }
+
+  
+
+
+
+
+
+
+
+
 
 
 
