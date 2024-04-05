@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const UserCartScreen(),
+                      builder: (context) =>  UserCartScreen(),
                     ),
                   );
                 },
@@ -105,7 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          Padding(
+         Container(
+          height: 250,
             padding: const EdgeInsets.only(left: 10),
             child: PopularWidget(),
           ),
@@ -123,7 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           
 
-          Padding(
+          Container(
+            height: 250,
             padding: const EdgeInsets.only(left: 10),
             child: PopularWorkWidget(),
           ),

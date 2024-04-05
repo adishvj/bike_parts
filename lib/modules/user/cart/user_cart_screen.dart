@@ -1,110 +1,151 @@
 import 'package:bike_parts/modules/user/checkout/check_out_screen.dart';
-import 'package:bike_parts/widgets/custom_button.dart';
+import 'package:bike_parts/services/api_service.dart';
+import 'package:bike_parts/services/db_service.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class UserCartScreen extends StatefulWidget {
-  const UserCartScreen({super.key});
+class UserCartScreen extends StatelessWidget {
 
-  @override
-  State<UserCartScreen> createState() => _UserCartScreenState();
-}
 
-class _UserCartScreenState extends State<UserCartScreen> {
+  const UserCartScreen({Key? key,}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.amber,
         centerTitle: true,
         title: const Text(
           "Cart",
           style: TextStyle(
-              color: Colors.black, fontSize: 30, fontWeight: FontWeight.w400),
+            color: Colors.black,
+            fontSize: 30,
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        color: Colors.white,
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) => Container(
-                  height: 120,
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all()),
-                  padding: const EdgeInsets.only(left: 25),
+      body: FutureBuilder(
+        future: _fetchCart(DbService.getLoginId()!),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            List<dynamic> cartItems = snapshot.data as List<dynamic>;
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: cartItems.length,
+                    itemBuilder: (context, index) => Container(
+                      height: 120,
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(),
+                      ),
+                      padding: const EdgeInsets.only(left: 25),
+                      child: Row(
+                        children: [
+                          Image.network(
+                            cartItems[index]['image'],
+                            width: 100,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Text(
+                              cartItems[index]['name'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: const Text("+"),
+                          ),
+                          Text(
+                            cartItems[index]['quantity'].toString(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: const Text("-"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     children: [
-                      const Image(
-                        image: NetworkImage(
-                          "https://images.carandbike.com/bike-images/big/ktm/rc-200/ktm-rc-200.jpg?v=26",
-                        ),
-                        width: 100,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Expanded(
-                        child: Text(
-                          "150cc Exhaust",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      TextButton(onPressed: () {}, child: const Text("+")),
                       const Text(
-                        "1",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        "Total:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
                       ),
-                      TextButton(onPressed: () {}, child: const Text("-")),
+                      Spacer(),
+                      Text(
+                        "₹total",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  Text(
-                    "Total:",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  width: MediaQuery.of(context).size.width,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.amber,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CheckOut(),
+                        ),
+                      );
+                    },
+                    child: const Text('Check Out'),
                   ),
-                  Spacer(),
-                  Text(
-                    "₹100",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              width: MediaQuery.of(context).size.width,
-              child: CustomButton(
-                color: Colors.amber,
-                text: 'Check Out',
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CheckOut(),
-                      ));
-                },
-              ),
-            ),
-          ],
-        ),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
+  }
+
+  Future<List<dynamic>> _fetchCart(String loginId) async {
+    final url = Uri.parse('${ApiService.baseUrl}/api/user/view-cart/$loginId');
+    final response = await http.get(url);
+
+    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load cart');
+    }
   }
 }

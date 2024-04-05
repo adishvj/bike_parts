@@ -1,5 +1,8 @@
 
 import 'package:bike_parts/modules/auth/login_screen.dart';
+import 'package:bike_parts/modules/mechanic/mech_update_part.dart';
+import 'package:bike_parts/modules/mechanic/mechanic_add_parts.dart';
+import 'package:bike_parts/modules/mechanic/profile/mech_profile_screen.dart';
 import 'package:bike_parts/modules/mechanic/view_parts.dart';
 import 'package:bike_parts/services/db_service.dart';
 import 'package:flutter/material.dart';
@@ -59,10 +62,11 @@ class MechanicHomeScreen extends StatelessWidget {
                 color: Colors.white,
                 child: ListTile(
                   leading: const Icon(Icons.grass, color: Colors.black),
-                  title: const Text('View turfs',
+                  title: const Text('Add parts',
                       style: TextStyle(color: Colors.black)),
                   trailing: const Icon(Icons.arrow_forward, color: Colors.black),
                   onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MechAddPartsScreen(),));
                     
                   },
                 ),
@@ -71,10 +75,12 @@ class MechanicHomeScreen extends StatelessWidget {
                 color: Colors.white,
                 child: ListTile(
                   leading: const Icon(Icons.festival, color: Colors.black),
-                  title: const Text('View Tournaments',
+                  title: const Text('Update parts',
                       style: TextStyle(color: Colors.black)),
                   trailing: const Icon(Icons.arrow_forward, color: Colors.black),
                   onTap: () {
+
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MechanicUpdatePartsScreen(),));
                    
                   },
                 ),
@@ -83,10 +89,13 @@ class MechanicHomeScreen extends StatelessWidget {
                 color: Colors.white,
                 child: ListTile(
                   leading: const Icon(Icons.book, color: Colors.black),
-                  title: const Text('Booking',
+                  title: const Text('Profile',
                       style: TextStyle(color: Colors.black)),
                   trailing: const Icon(Icons.arrow_forward, color: Colors.black),
                   onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MechProfileScreen(),));
+
+
                    
                   },
                 ),
