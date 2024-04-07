@@ -3,7 +3,18 @@ import 'package:bike_parts/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 class UserEditProfileScreen extends StatelessWidget {
-  UserEditProfileScreen({super.key});
+  UserEditProfileScreen({
+    super.key, 
+    required this.name, 
+    required this.phone, 
+    required this.address
+    });
+
+  final String  name;
+  final String phone;
+  final String address;
+
+
 
   
 TextEditingController _nameController = TextEditingController();
@@ -13,6 +24,11 @@ TextEditingController _phoneController = TextEditingController();
   
   @override
   Widget build(BuildContext context) {
+    _emailController.text = address;
+    _phoneController.text = phone;
+    _nameController.text =  name;
+
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -73,7 +89,7 @@ TextEditingController _phoneController = TextEditingController();
                 text: 'Confirm',
                 color: Colors.amber,
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context,true);
                 },
               ),
             )

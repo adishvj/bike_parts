@@ -437,6 +437,8 @@ Future<void> orderParts(BuildContext context, String loginId) async {
     );
 
     if (response.statusCode == 200) {
+
+      print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Parts ordered successfully'),
@@ -449,6 +451,54 @@ Future<void> orderParts(BuildContext context, String loginId) async {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Error: $e'),
+      ),
+    );
+  }
+}
+
+
+Future<void> updateCartQuantity({required BuildContext context,
+required  String loginId,  
+required  String partsId,
+required int quantity,
+required String price
+
+}) async {
+  String url = '$baseUrl/api/user/update-cart-quantity/$loginId/$partsId';
+
+  Map<String, dynamic> body = {
+    'quantity': quantity.toString(),
+  
+  };
+
+  try {
+    var response = await http.post(
+      Uri.parse(url),
+      
+      body:body
+    );
+
+  
+
+    if (response.statusCode == 200) {
+     
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Cart quantity updated successfully'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update cart quantity. Status code: ${response.statusCode}'),
+        ),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Error updating cart quantity: $e'),
       ),
     );
   }

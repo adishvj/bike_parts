@@ -5,14 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class UserCartScreen extends StatelessWidget {
+class UserCartScreen extends StatefulWidget {
+  const UserCartScreen({
+    Key? key,
+  }) : super(key: key);
 
+  @override
+  State<UserCartScreen> createState() => _UserCartScreenState();
+}
 
-  const UserCartScreen({Key? key,}) : super(key: key);
-
+class _UserCartScreenState extends State<UserCartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.amber,
         centerTitle: true,
@@ -29,11 +35,13 @@ class UserCartScreen extends StatelessWidget {
         future: _fetchCart(DbService.getLoginId()!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            List<dynamic> cartItems = snapshot.data as List<dynamic>;
+            List<dynamic> cartItems = snapshot.data!['data'] as List<dynamic>;
+
+            print('cartItems');
             return Column(
               children: [
                 Expanded(
@@ -53,7 +61,7 @@ class UserCartScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           Image.network(
-                            cartItems[index]['image'],
+                            cartItems[index]['parts_image'][0],
                             width: 100,
                           ),
                           const SizedBox(
@@ -61,14 +69,26 @@ class UserCartScreen extends StatelessWidget {
                           ),
                           Expanded(
                             child: Text(
-                              cartItems[index]['name'],
+                              cartItems[index]['part_name'],
+                              overflow: TextOverflow.clip,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              await ApiService().updateCartQuantity(
+                                  context: context,
+                                  loginId: DbService.getLoginId()!,
+                                  partsId: cartItems[index]['parts_id'],
+                                  quantity:
+                                      int.parse(cartItems[index]['quantity']) +
+                                          1,
+                                  price: '10');
+
+                              setState(() {});
+                            },
                             child: const Text("+"),
                           ),
                           Text(
@@ -78,9 +98,37 @@ class UserCartScreen extends StatelessWidget {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              await ApiService().updateCartQuantity(
+                                  context: context,
+                                  loginId: DbService.getLoginId()!,
+                                  partsId: cartItems[index]['_id'],
+                                  quantity:
+                                      int.parse(cartItems[index]['quantity']) -
+                                          1,
+                                  price: '1000');
+
+                              setState(() {});
+                            },
                             child: const Text("-"),
                           ),
+
+                          GestureDetector(
+                            onTap: ()  async{
+                              setState(() {
+                                
+                              });
+
+                             await  ApiService().deleteCart(context, cartItems[index]['_id']);
+
+                             setState(() {
+                               
+                             });
+                              
+                            },
+                            child: const Icon(Icons.delete,color: Colors.red,),
+                            )
+                         
                         ],
                       ),
                     ),
@@ -97,9 +145,9 @@ class UserCartScreen extends StatelessWidget {
                           fontSize: 20,
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Text(
-                        "₹total",
+                        "₹1${snapshot.data!['totalAmount']}",
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
@@ -116,13 +164,16 @@ class UserCartScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.amber,
+                      backgroundColor: Colors.amber,
                     ),
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const CheckOut(),
+                          builder: (context) => CheckOut(
+                            totalAmount:
+                                snapshot.data!['totalAmount'].toString(),
+                          ),
                         ),
                       );
                     },
@@ -137,12 +188,14 @@ class UserCartScreen extends StatelessWidget {
     );
   }
 
-  Future<List<dynamic>> _fetchCart(String loginId) async {
+  Future<Map<String, dynamic>> _fetchCart(String loginId) async {
     final url = Uri.parse('${ApiService.baseUrl}/api/user/view-cart/$loginId');
+
+   
     final response = await http.get(url);
 
-    print(response.body);
     if (response.statusCode == 200) {
+
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load cart');

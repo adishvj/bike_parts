@@ -52,6 +52,8 @@ class _UserWorkShopScreenState extends State<UserWorkShopScreen> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else {
                   List<dynamic> workshops = snapshot.data ?? [];
+                  print('workshops');
+                  print(workshops);
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: GridView.count(
@@ -78,14 +80,14 @@ class _UserWorkShopScreenState extends State<UserWorkShopScreen> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Image.network(
-                                            'https://img.freepik.com/free-photo/mechanic-repairing-bicycle_23-2148138617.jpg?w=1380&t=st=1708497923~exp=1708498523~hmac=db0aa97cb4ebd6cb6b1a4e4f5a8da5d25d20e4a8be9b4bb5abeb10a7cbbcc7d0',
+                                             workshop['images'].length != 0 ? workshop['images'][0] :'https://img.freepik.com/free-photo/mechanic-repairing-bicycle_23-2148138617.jpg?w=1380&t=st=1708497923~exp=1708498523~hmac=db0aa97cb4ebd6cb6b1a4e4f5a8da5d25d20e4a8be9b4bb5abeb10a7cbbcc7d0',
                                             fit: BoxFit.fill,
                                           ),
                                         ),
                                       ),
                                     ),
                                     Text(
-                                      workshop['workshop_name'],
+                                      workshop['workshop_name'] ?? 'workshop',
                                       style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 17,
@@ -93,7 +95,7 @@ class _UserWorkShopScreenState extends State<UserWorkShopScreen> {
                                     ),
                                     const SizedBox(height: 5),
                                     Text(
-                                      workshop['mobile'],
+                                      workshop['mobile'] ?? '1234567890',
                                       style: const TextStyle(
                                         color: Colors.grey,
                                       ),

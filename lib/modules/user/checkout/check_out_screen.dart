@@ -1,11 +1,14 @@
+import 'package:bike_parts/modules/payment_screen.dart';
 import 'package:bike_parts/modules/user/checkout/user_order_confirmed.dart';
-import 'package:bike_parts/utils/constants.dart';
+import 'package:bike_parts/services/api_service.dart';
+import 'package:bike_parts/services/db_service.dart';
 import 'package:bike_parts/widgets/custom_button.dart';
-import 'package:bike_parts/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 class CheckOut extends StatefulWidget {
-  const CheckOut({super.key});
+  const CheckOut({super.key, required this.totalAmount});
+
+  final String totalAmount;
 
   @override
   State<CheckOut> createState() => _CheckOutState();
@@ -13,6 +16,9 @@ class CheckOut extends StatefulWidget {
 
 class _CheckOutState extends State<CheckOut> {
   final _addressController = TextEditingController();
+
+  bool isPaid = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,18 +55,27 @@ class _CheckOutState extends State<CheckOut> {
                         height: 20,
                       ),
 
-                      Text(
-                        'Address:',
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.grey.shade800),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextField(
-                        controller: _addressController,
-                        hintText: 'Enter Address',
-                        borderColor: Colors.grey,
+                    
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Payment'),
+                          isPaid
+                              ? Text('completed')
+                              : CustomButton(
+                                  text: 'pay',
+                                  onPressed: () async{
+
+                                   isPaid = await  Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen(),));
+                                   if(isPaid){
+
+                                    setState(() {
+                                      
+                                    });
+                                   }
+                                  },
+                                )
+                        ],
                       ),
 
                       const SizedBox(
@@ -113,16 +128,6 @@ class _CheckOutState extends State<CheckOut> {
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600),
                                 ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  "Get it by 20 jul - 27 jul | Free Delivery",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                  ),
-                                )
                               ],
                             ),
                           ],
@@ -255,7 +260,7 @@ class _CheckOutState extends State<CheckOut> {
                                             fontSize: 12),
                                       ),
                                       Text(
-                                        '2013',
+                                        widget.totalAmount,
                                         style: TextStyle(
                                             color: Colors.grey.shade700,
                                             fontSize: 12),
@@ -329,14 +334,18 @@ class _CheckOutState extends State<CheckOut> {
                                     child: CustomButton(
                                       text: 'Place Order',
                                       color: Colors.amber,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const OrderConfirmScreen(),
-                                          ),
-                                        );
+                                      onPressed: () async {
+                                       if(isPaid){
+                                         await ApiService().orderParts(
+                                            context, DbService.getLoginId()!);
+
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OrderConfirmScreen(),));
+
+                                        
+                                       }else{
+
+                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Select payment method')));
+                                       }
                                       },
                                     ))
                               ],

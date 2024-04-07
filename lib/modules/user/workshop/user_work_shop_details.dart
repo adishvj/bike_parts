@@ -51,7 +51,7 @@ class UserWorkShopDetails extends StatelessWidget {
                           ),
                           Text(
 
-                              details['workshop_name'],
+                              details['workshop_name']??'workshop',
                               
                               overflow: TextOverflow.ellipsis,
                               maxLines:4,
@@ -78,7 +78,7 @@ class UserWorkShopDetails extends StatelessWidget {
                           ),
                           Text(
 
-                              details['mobile'],
+                              details['mobile']??'123456789',
                               
                               overflow: TextOverflow.ellipsis,
                               maxLines:4,
@@ -102,7 +102,7 @@ class UserWorkShopDetails extends StatelessWidget {
                           ),
                           Text(
 
-                              details['address'],
+                              details['address']??'address',
                               
                               overflow: TextOverflow.ellipsis,
                               maxLines:4,

@@ -68,7 +68,6 @@ class MechProfileScreen extends StatelessWidget {
               text: 'Edit',
               color: Colors.amber,
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UserEditProfileScreen(),),);
               },
             ),
           )
