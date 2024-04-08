@@ -1,6 +1,7 @@
 import 'package:bike_parts/modules/user/home/user_home_screen.dart';
 import 'package:bike_parts/modules/user/profile/user_profile_screen.dart';
 import 'package:bike_parts/modules/user/spareparts/user_spare_parts_screen.dart';
+import 'package:bike_parts/modules/user/user_booking_list_screen.dart';
 import 'package:bike_parts/modules/user/workshop/user_work_shop_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,8 @@ class _UserRootScreenState extends State<UserRootScreen> {
   final _pagesList = [
     const HomeScreen(),
     const UserSparePartsScreen(),
+
+    UserBookingList(),
     const UserWorkShopScreen(),
      UserProfileScreen()
 
@@ -48,6 +51,10 @@ class _UserRootScreenState extends State<UserRootScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.miscellaneous_services),
             label: 'Spare parts',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Bookings',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.construction),

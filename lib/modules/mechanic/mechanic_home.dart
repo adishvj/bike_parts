@@ -61,7 +61,7 @@ class MechanicHomeScreen extends StatelessWidget {
               Card(
                 color: Colors.white,
                 child: ListTile(
-                  leading: const Icon(Icons.grass, color: Colors.black),
+                  leading: const Icon(Icons.precision_manufacturing, color: Colors.black),
                   title: const Text('Add parts',
                       style: TextStyle(color: Colors.black)),
                   trailing: const Icon(Icons.arrow_forward, color: Colors.black),
@@ -74,7 +74,7 @@ class MechanicHomeScreen extends StatelessWidget {
               Card(
                 color: Colors.white,
                 child: ListTile(
-                  leading: const Icon(Icons.festival, color: Colors.black),
+                  leading: const Icon(Icons.build, color: Colors.black),
                   title: const Text('Update parts',
                       style: TextStyle(color: Colors.black)),
                   trailing: const Icon(Icons.arrow_forward, color: Colors.black),

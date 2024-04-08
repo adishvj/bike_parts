@@ -1,22 +1,48 @@
+import 'package:bike_parts/services/api_service.dart';
+import 'package:bike_parts/services/db_service.dart';
 import 'package:bike_parts/widgets/custom_button.dart';
 import 'package:bike_parts/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class MechEditProfileScreen extends StatelessWidget {
-  MechEditProfileScreen({super.key});
+class MechEditProfileScreen extends StatefulWidget {
+  MechEditProfileScreen({super.key, required this.name, required this.qualifiation, required this.phone});
 
-  
-TextEditingController _nameController = TextEditingController();
-TextEditingController _emailController = TextEditingController();
-TextEditingController _phoneController = TextEditingController();
 
-  
+  final String name;
+  final String qualifiation;
+  final String phone;
+
+  @override
+  State<MechEditProfileScreen> createState() => _MechEditProfileScreenState();
+}
+
+class _MechEditProfileScreenState extends State<MechEditProfileScreen> {
+final nameController = TextEditingController();
+
+final qualificationController = TextEditingController();
+
+final phoneController = TextEditingController();
+
+bool loading = false;
+
+@override
+  void initState() {
+
+    nameController.text = widget.name;
+    qualificationController.text = widget.qualifiation;
+    phoneController.text = widget.phone;
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: Center(
-        child: Column(
+        child: loading ? CircularProgressIndicator()  : Column(
           children: [
             AppBar(
               backgroundColor: Colors.transparent,
@@ -34,7 +60,7 @@ TextEditingController _phoneController = TextEditingController();
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: CustomTextField(
                 hintText: 'name',
-                controller: _nameController,
+                controller: nameController,
                 
                 borderColor: Colors.grey.shade500,
               ),
@@ -45,8 +71,8 @@ TextEditingController _phoneController = TextEditingController();
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: CustomTextField(
-                hintText: 'email',
-                controller: _emailController,
+                hintText: 'qualification',
+                controller: qualificationController,
                 
                 borderColor: Colors.grey.shade500,
               ),
@@ -58,7 +84,7 @@ TextEditingController _phoneController = TextEditingController();
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: CustomTextField(
                 hintText: 'phone',
-                controller: _phoneController,
+                controller: phoneController,
               
                 borderColor: Colors.grey.shade500,
               ),
@@ -72,8 +98,24 @@ TextEditingController _phoneController = TextEditingController();
               child: CustomButton(
                 text: 'Confirm',
                 color: Colors.amber,
-                onPressed: () {
-                  Navigator.pop(context);
+                onPressed: () async{
+                  setState(() {
+                    loading = true;
+                  });
+
+                 await  ApiService().updateMechanicProfile(
+                    context: context, 
+                    loginId: DbService.getLoginId()!, 
+                    name: nameController.text,
+                     phone: phoneController.text,
+                      qualification: qualificationController.text);
+                setState(() {
+                  loading = false;
+                });
+                
+
+
+                 
                 },
               ),
             )
@@ -82,4 +124,44 @@ TextEditingController _phoneController = TextEditingController();
       ),
     );
   }
+
+  Future<void> fetchAndUpdateMechanicProfile(BuildContext context, String apiUrl, String loginId, List<Map<String, dynamic>> queryParams) async {
+  try {
+    // Construct the query string from the list of query parameters
+    
+    final response = await http.get(
+      Uri.parse('${ApiService.baseUrl}/api/mechanic/update-mechanic-profile/${DbService.getLoginId()}'),
+
+      headers: {
+        
+      }
+    
+    
+    );
+
+    if (response.statusCode == 200) {
+
+
+      ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Updated!!!'),
+      ),
+
+
+    );
+
+    Navigator.pop(context);
+     
+      // Use mechanicProfile data as neede
+    } else {
+      throw Exception('Failed to load mechanic profile');
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Error: $e'),
+      ),
+    );
+  }
+}
 }

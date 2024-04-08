@@ -86,16 +86,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Forget password',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.centerRight,
+                  //   child: TextButton(
+                  //     onPressed: () {},
+                  //     child: const Text(
+                  //       'Forget password',
+                  //       style: TextStyle(color: Colors.black),
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -153,6 +153,8 @@ class _LoginScreenState extends State<LoginScreen> {
           email: _emailController.text,
           password: _passwordController.text,
           context: context);
+
+          print(role);
 
       if (role == 3) {
         if(context.mounted){

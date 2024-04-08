@@ -257,6 +257,7 @@ class _MechanicUpdatePartsConfirmScreenState
                                 });
 
                                 await ApiService().updateParts(
+                                  partsId: widget.details['_id'],
                                   context: context,
                                   partname: _partName.text,
                                   quantity: _qty.text,

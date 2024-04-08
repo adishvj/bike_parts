@@ -20,7 +20,6 @@ class _MechAddPartsScreenState extends State<MechAddPartsScreen> {
   final _description = TextEditingController();
   final _qty = TextEditingController();
 
-
   bool selectTv1 = false;
   bool selectTv2 = false;
   bool selectTv3 = false;
@@ -220,11 +219,6 @@ class _MechAddPartsScreenState extends State<MechAddPartsScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          
-                          
-                              
-                          
-                  
                           TextField(
                             controller: _description,
                             minLines: 6,
@@ -250,23 +244,21 @@ class _MechAddPartsScreenState extends State<MechAddPartsScreen> {
                             child: CustomButton(
                               text: "Submit",
                               onPressed: () async {
-
                                 setState(() {
-                                  loading =  true;
+                                  loading = true;
                                 });
 
+                                await ApiService().addParts(
+                                    context: context,
+                                    partname: _partName.text,
+                                    quantity: _qty.text,
+                                    price: _rate.text,
+                                    description: _description.text,
+                                    image: File(image!.path));
 
-                              await  ApiService().addParts(
-                                  context, 
-
-                                  _partName.text
-                                  , _qty.text,
-                                   _rate.text, _description.text, File(image!.path));
-
-                              setState(() {
-                                loading = false;
-                              });
-
+                                setState(() {
+                                  loading = false;
+                                });
                               },
                             ),
                           )
