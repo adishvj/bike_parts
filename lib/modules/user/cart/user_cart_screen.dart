@@ -1,9 +1,10 @@
+import 'dart:convert';
+
 import 'package:bike_parts/modules/user/checkout/check_out_screen.dart';
 import 'package:bike_parts/services/api_service.dart';
 import 'package:bike_parts/services/db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class UserCartScreen extends StatefulWidget {
   const UserCartScreen({
@@ -106,29 +107,26 @@ class _UserCartScreenState extends State<UserCartScreen> {
                                   quantity:
                                       int.parse(cartItems[index]['quantity']) -
                                           1,
-                                  price: '1000');
+                                  price: cartItems[index]['rate']);
 
                               setState(() {});
                             },
                             child: const Text("-"),
                           ),
-
                           GestureDetector(
-                            onTap: ()  async{
-                              setState(() {
-                                
-                              });
+                            onTap: () async {
+                              setState(() {});
 
-                             await  ApiService().deleteCart(context, cartItems[index]['_id']);
+                              await ApiService()
+                                  .deleteCart(context, cartItems[index]['_id']);
 
-                             setState(() {
-                               
-                             });
-                              
+                              setState(() {});
                             },
-                            child: const Icon(Icons.delete,color: Colors.red,),
-                            )
-                         
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -147,7 +145,7 @@ class _UserCartScreenState extends State<UserCartScreen> {
                       ),
                       const Spacer(),
                       Text(
-                        "₹1${snapshot.data!['totalAmount']}",
+                        "₹ ${snapshot.data!['totalAmount']}",
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
@@ -191,11 +189,9 @@ class _UserCartScreenState extends State<UserCartScreen> {
   Future<Map<String, dynamic>> _fetchCart(String loginId) async {
     final url = Uri.parse('${ApiService.baseUrl}/api/user/view-cart/$loginId');
 
-   
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load cart');

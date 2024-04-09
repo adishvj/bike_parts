@@ -24,12 +24,9 @@ class _UserRootScreenState extends State<UserRootScreen> {
   final _pagesList = [
     const HomeScreen(),
     const UserSparePartsScreen(),
-
     UserBookingList(),
     const UserWorkShopScreen(),
-     UserProfileScreen()
-
-    
+    UserProfileScreen()
   ];
 
   @override

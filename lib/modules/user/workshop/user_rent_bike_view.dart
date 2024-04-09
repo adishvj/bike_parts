@@ -1,18 +1,18 @@
+import 'dart:convert';
+
 import 'package:bike_parts/modules/user/workshop/user_bike_details.dart';
 import 'package:bike_parts/services/api_service.dart';
 import 'package:bike_parts/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 
 class RentBikesView extends StatelessWidget {
   const RentBikesView({super.key});
 
   Future<List<dynamic>> _fetchBikes() async {
-    final response = await http.get(Uri.parse('${ApiService.baseUrl}/api/user/view-all-bikes'));
+    final response = await http
+        .get(Uri.parse('${ApiService.baseUrl}/api/user/view-all-bikes'));
     if (response.statusCode == 200) {
-
       print(response.body);
       return json.decode(response.body)["data"];
     } else {
@@ -41,7 +41,8 @@ class RentBikesView extends StatelessWidget {
               itemBuilder: (context, index) {
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(bikes[index]['bike_image'][0]),
+                    backgroundImage:
+                        NetworkImage(bikes[index]['bike_image'][0]),
                   ),
                   title: Center(
                     child: Text(bikes[index]['bike_name']),

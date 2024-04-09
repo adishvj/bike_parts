@@ -1,13 +1,11 @@
 import 'dart:convert';
+
 import 'package:bike_parts/services/api_service.dart';
 import 'package:bike_parts/services/db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
 class UserBookingList extends StatefulWidget {
-
-
   UserBookingList({Key? key}) : super(key: key);
 
   @override
@@ -32,7 +30,10 @@ class _UserBookingListState extends State<UserBookingList> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          title: const Text('User Booking List',style: TextStyle(color:Colors.black),),
+          title: const Text(
+            'User Booking List',
+            style: TextStyle(color: Colors.black),
+          ),
           bottom: const TabBar(
             dividerColor: Colors.black,
             labelColor: Colors.black,
@@ -193,18 +194,16 @@ class _UserBookingListState extends State<UserBookingList> {
     );
   }
 
-
-
   Future<List<dynamic>> _fetchBookings() async {
-
     print(DbService.getLoginId());
-    final response = await http.get(Uri.parse('${ApiService.baseUrl}/api/user/view-all-bike/booking/${DbService.getLoginId()}'));
-     print(response.body);
-     print(response.statusCode);
-    
-    if (response.statusCode == 200) {
+    final response = await http.get(Uri.parse(
+        '${ApiService.baseUrl}/api/user/view-all-bike-booking/${DbService.getLoginId()}'));
 
-     
+    print('gggggggggggggggggggggggggggggggggg');
+    print(response.body);
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
       return json.decode(response.body)['data'];
     } else {
       throw Exception('Failed to load bookings');

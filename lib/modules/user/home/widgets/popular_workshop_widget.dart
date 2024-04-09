@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:bike_parts/modules/user/workshop/user_work_shop_details.dart';
+import 'package:bike_parts/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 
 class PopularWorkWidget extends StatefulWidget {
   PopularWorkWidget({super.key});
@@ -18,7 +18,7 @@ class _PopularWorkWidgetState extends State<PopularWorkWidget> {
     'https://w7.pngwing.com/pngs/470/228/png-transparent-spare-part-motorcycle-engine-machine-engine-motorcycle-vehicle-transport-thumbnail.png'
   ];
 
-   late Future<List<dynamic>> _workshopListFuture;
+  late Future<List<dynamic>> _workshopListFuture;
 
   @override
   void initState() {
@@ -27,9 +27,9 @@ class _PopularWorkWidgetState extends State<PopularWorkWidget> {
   }
 
   Future<List<dynamic>> _fetchWorkshopList() async {
-    final response = await http.get(Uri.parse('https://vadakara-mca-bike-backend.onrender.com/api/register/view-all-workshops'));
+    final response = await http.get(
+        Uri.parse('${ApiService.baseUrl}/api/register/view-all-workshops'));
     if (response.statusCode == 200) {
-
       print(response.body);
       return jsonDecode(response.body)['data'];
     } else {
@@ -47,7 +47,7 @@ class _PopularWorkWidgetState extends State<PopularWorkWidget> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text(' ${snapshot.error}'));
           } else {
             List<dynamic> workshopList = snapshot.data!;
             return ListView.builder(
@@ -59,7 +59,6 @@ class _PopularWorkWidgetState extends State<PopularWorkWidget> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => UserWorkShopDetails(
-                        image: workshopList[index]['image'],
                         details: workshopList[index],
                       ),
                     ),

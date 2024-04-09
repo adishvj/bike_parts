@@ -1,8 +1,9 @@
 import 'dart:convert';
+
+import 'package:bike_parts/modules/user/workshop/user_work_shop_details.dart';
 import 'package:bike_parts/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:bike_parts/modules/user/workshop/user_work_shop_details.dart';
 
 class UserWorkShopScreen extends StatefulWidget {
   const UserWorkShopScreen({Key? key}) : super(key: key);
@@ -49,7 +50,7 @@ class _UserWorkShopScreenState extends State<UserWorkShopScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return Center(child: Text('${snapshot.error}'));
                 } else {
                   List<dynamic> workshops = snapshot.data ?? [];
                   print('workshops');
@@ -79,10 +80,11 @@ class _UserWorkShopScreenState extends State<UserWorkShopScreen> {
                                       child: Center(
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Image.network(
-                                             workshop['images'].length != 0 ? workshop['images'][0] :'https://img.freepik.com/free-photo/mechanic-repairing-bicycle_23-2148138617.jpg?w=1380&t=st=1708497923~exp=1708498523~hmac=db0aa97cb4ebd6cb6b1a4e4f5a8da5d25d20e4a8be9b4bb5abeb10a7cbbcc7d0',
-                                            fit: BoxFit.fill,
-                                          ),
+                                          child: Image.network(workshop[
+                                                      'images'] !=
+                                                  null
+                                              ? workshop['images'][0]
+                                              : 'https://img.freepik.com/free-photo/mechanic-repairing-bicycle_23-2148138617.jpg?w=1380&t=st=1708497923~exp=1708498523~hmac=db0aa97cb4ebd6cb6b1a4e4f5a8da5d25d20e4a8be9b4bb5abeb10a7cbbcc7d0'),
                                         ),
                                       ),
                                     ),
@@ -108,8 +110,7 @@ class _UserWorkShopScreenState extends State<UserWorkShopScreen> {
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 UserWorkShopDetails(
-                                                    image:
-                                                        'https://img.freepik.com/free-photo/mechanic-repairing-bicycle_23-2148138617.jpg?w=1380&t=st=1708497923~exp=1708498523~hmac=db0aa97cb4ebd6cb6b1a4e4f5a8da5d25d20e4a8be9b4bb5abeb10a7cbbcc7d0',details : workshop),
+                                                    details: workshop),
                                           ),
                                         );
                                       },

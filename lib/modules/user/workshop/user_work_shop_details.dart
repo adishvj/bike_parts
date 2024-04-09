@@ -3,13 +3,14 @@ import 'package:bike_parts/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class UserWorkShopDetails extends StatelessWidget {
-  const UserWorkShopDetails({super.key, required this.image,required this.details});
+  const UserWorkShopDetails({super.key, required this.details});
 
-  final String image;
-  final Map<String,dynamic>  details;
+  final Map<String, dynamic> details;
 
   @override
   Widget build(BuildContext context) {
+    print(details);
+
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       body: SafeArea(
@@ -19,7 +20,9 @@ class UserWorkShopDetails extends StatelessWidget {
           children: [
             Expanded(
                 child: Image(
-              image: NetworkImage(image),
+              image: NetworkImage(
+                'https://img.freepik.com/free-photo/mechanic-repairing-bicycle_23-2148138617.jpg?w=1380&t=st=1708497923~exp=1708498523~hmac=db0aa97cb4ebd6cb6b1a4e4f5a8da5d25d20e4a8be9b4bb5abeb10a7cbbcc7d0',
+              ),
               fit: BoxFit.fill,
             )),
             Expanded(
@@ -34,7 +37,6 @@ class UserWorkShopDetails extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
                           Text(
                             'Name',
                             style: TextStyle(
@@ -50,18 +52,15 @@ class UserWorkShopDetails extends StatelessWidget {
                             height: 10,
                           ),
                           Text(
-
-                              details['workshop_name']??'workshop',
-                              
-                              overflow: TextOverflow.ellipsis,
-                              maxLines:4,
-                              style: TextStyle(
-                                  fontSize: 15, color: Colors.grey.shade500),
-                            ),
-                          SizedBox(height: 20,),
-
-                          
-
+                            details['workshop_name'] ?? 'workshop',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 4,
+                            style: TextStyle(
+                                fontSize: 15, color: Colors.grey.shade500),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           Text(
                             'Phone',
                             style: TextStyle(
@@ -77,15 +76,15 @@ class UserWorkShopDetails extends StatelessWidget {
                             height: 10,
                           ),
                           Text(
-
-                              details['mobile']??'123456789',
-                              
-                              overflow: TextOverflow.ellipsis,
-                              maxLines:4,
-                              style: TextStyle(
-                                  fontSize: 15, color: Colors.grey.shade500),
-                            ),
-                          SizedBox(height: 20,),
+                            details['mobile'] ?? '123456789',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 4,
+                            style: TextStyle(
+                                fontSize: 15, color: Colors.grey.shade500),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           Text(
                             'Address',
                             style: TextStyle(
@@ -101,15 +100,12 @@ class UserWorkShopDetails extends StatelessWidget {
                             height: 10,
                           ),
                           Text(
-
-                              details['address']??'address',
-                              
-                              overflow: TextOverflow.ellipsis,
-                              maxLines:4,
-                              style: TextStyle(
-                                  fontSize: 15, color: Colors.grey.shade500),
-                            ),
-
+                            details['address'] ?? 'address',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 4,
+                            style: TextStyle(
+                                fontSize: 15, color: Colors.grey.shade500),
+                          ),
                           Spacer(),
                           SizedBox(
                             width: MediaQuery.of(context).size.width,
