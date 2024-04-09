@@ -1,3 +1,7 @@
+import 'package:bike_parts/modules/auth/login_screen.dart';
+import 'package:bike_parts/modules/workshop/workshop_add_bike.dart';
+import 'package:bike_parts/modules/workshop/workshop_view_all_bikes.dart';
+import 'package:bike_parts/modules/workshop/workshop_view_all_mech.dart';
 import 'package:bike_parts/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +15,6 @@ class  WorkShopHomeScreen extends StatefulWidget {
 
 class _WorkShopHomeScreenState extends State<WorkShopHomeScreen> {
 bool isAttend = false;
-
 bool loading = false;
 
 
@@ -44,6 +47,8 @@ bool loading = false;
                     GestureDetector(
                       onTap: () {
 
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => WorkshopViewAllMechanicsScreen(),));
+
                       },
                       child: Container(
                         clipBehavior: Clip.antiAlias,
@@ -67,8 +72,13 @@ bool loading = false;
                         ),
                       ),
                     ),
+                 
+                 
                    GestureDetector(
                       onTap: () {
+
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => WorkshopAddBikes(),));
                       
                         // Add your navigation logic here
                       },
@@ -82,7 +92,7 @@ bool loading = false;
                             color:  KButtonColor,
                             padding: const EdgeInsets.all(12),
                             child: const Text(
-                              'View parts', // Name of the item
+                              'Add bikes', // Name of the item
                               style: TextStyle(color: Colors.black),
                               textAlign: TextAlign.center,
                             ),
@@ -97,6 +107,8 @@ bool loading = false;
                    
                      GestureDetector(
                       onTap: () {
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => WorkShopRentBikesView(),));
                       
                         // Add your navigation logic here
                       },
@@ -125,6 +137,11 @@ bool loading = false;
                    
                    GestureDetector(
                       onTap: () {
+
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginScreen(),),
+                           (route) => false);
                      
                       },
                       child: Container(

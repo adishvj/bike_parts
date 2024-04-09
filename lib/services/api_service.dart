@@ -598,6 +598,95 @@ required String loginId,required String name,required String phone,required Stri
   }
 }
 
+Future<void> approveMechanic(BuildContext context, String loginId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/register/approve-mechanic/$loginId'),
+    );
+
+    if (response.statusCode == 200) {
+      // Request was successful
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Mechanic approved successfully'),
+        backgroundColor: Colors.green,
+      ));
+    } else {
+      // Request failed
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to approve mechanic: ${response.statusCode}'),
+        backgroundColor: Colors.red,
+      ));
+    }
+  } catch (e) {
+    // An error occurred
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('An error occurred: $e'),
+      backgroundColor: Colors.red,
+    ));
+  }
+}
+
+
+Future<void> rejectMechanic(BuildContext context, String loginId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('${baseUrl}m/api/register/reject-mechanic/$loginId'),
+    );
+
+    if (response.statusCode == 200) {
+      // Request was successful
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Mechanic rejected successfully'),
+        backgroundColor: Colors.green,
+      ));
+    } else {
+      // Request failed
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to reject mechanic: ${response.statusCode}'),
+        backgroundColor: Colors.red,
+      ));
+    }
+  } catch (e) {
+    // An error occurred
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('An error occurred: $e'),
+      backgroundColor: Colors.red,
+    ));
+  }
+}
+
+
+Future<void> deleteBike(BuildContext context, String bikeId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/workshop/delete-bike/$bikeId'),
+    );
+
+    if (response.statusCode == 200) {
+      // Request was successful
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Bike deleted successfully'),
+        backgroundColor: Colors.green,
+      ));
+    } else {
+      // Request failed
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to delete bike: ${response.statusCode}'),
+        backgroundColor: Colors.red,
+      ));
+    }
+  } catch (e) {
+    // An error occurred
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('An error occurred: $e'),
+      backgroundColor: Colors.red,
+    ));
+  }
+}
+
+
+
+
 
 
 
