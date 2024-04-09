@@ -1,4 +1,5 @@
 import 'package:bike_parts/modules/auth/login_screen.dart';
+import 'package:bike_parts/modules/workshop/profile/work_shop_profile.dart';
 import 'package:bike_parts/modules/workshop/workshop_add_bike.dart';
 import 'package:bike_parts/modules/workshop/workshop_view_all_bikes.dart';
 import 'package:bike_parts/modules/workshop/workshop_view_all_mech.dart';
@@ -129,6 +130,37 @@ bool loading = false;
                           ),
                           child: Image.asset(
                             'assets/images/bikes.jpeg',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+
+
+                    GestureDetector(
+                      onTap: () {
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => WorkShopProfileScreen(),));
+                      
+                        // Add your navigation logic here
+                      },
+                      child: Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15)
+                        ),
+                        child: GridTile(
+                          footer: Container(
+                            color:  KButtonColor,
+                            padding: const EdgeInsets.all(12),
+                            child: const Text(
+                              'Profile', // Name of the item
+                              style: TextStyle(color: Colors.black),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          child: Image.network(
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRPFBU-zohtrnntceQIYCsbuaCoIFj0FzBh39kWcfZRZIDp0-y_fxZfQsac7HonmgRpZE&usqp=CAU',
                             fit: BoxFit.cover,
                           ),
                         ),

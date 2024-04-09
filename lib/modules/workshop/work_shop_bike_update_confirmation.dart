@@ -1,7 +1,7 @@
-
 import 'dart:io';
 
 import 'package:bike_parts/services/api_service.dart';
+import 'package:bike_parts/services/db_service.dart';
 import 'package:bike_parts/widgets/custom_button.dart';
 import 'package:bike_parts/widgets/custom_text_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,34 +11,43 @@ import 'package:image_picker/image_picker.dart';
 class WorkShopUpdatePartsConfirmScreen extends StatefulWidget {
   WorkShopUpdatePartsConfirmScreen({super.key, required this.details});
 
-  final Map<String, dynamic> details;
+
+  final Map<String,dynamic> details;
 
   @override
-  State<WorkShopUpdatePartsConfirmScreen> createState() =>
-      _WorkShopUpdatePartsConfirmScreenState();
+  State<WorkShopUpdatePartsConfirmScreen> createState() => _WorkShopUpdatePartsConfirmScreenState();
 }
 
-class _WorkShopUpdatePartsConfirmScreenState
-    extends State<WorkShopUpdatePartsConfirmScreen> {
-  final _rate = TextEditingController();
-  final _partName = TextEditingController();
-  final _description = TextEditingController();
-  final _qty = TextEditingController();
-
-  bool loading = false;
-
-  final ImagePicker picker = ImagePicker();
-  XFile? image;
+class _WorkShopUpdatePartsConfirmScreenState extends State<WorkShopUpdatePartsConfirmScreen> {
+  
+  final _bikeNameController = TextEditingController();
+  final _rate_per_day = TextEditingController();
+  final _qtyController = TextEditingController();
+  final _milageController =  TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   void initState() {
-    _rate.text = widget.details['rate'];
-    _description.text = widget.details['description'];
-    _partName.text = widget.details['part_name'];
-    _qty.text = widget.details['quantity'];
+    _bikeNameController.text = widget.details['bike_name'];
+    _rate_per_day.text = widget.details['rate_per_day'];
+    _milageController.text = widget.details['milage'];
+    _qtyController.text = widget.details['quantity'];
+    _descriptionController.text =widget.details['description'];
+
+
 
     super.initState();
   }
+
+
+ 
+
+  bool loading = false;
+
+  String type = '';
+
+  final ImagePicker picker = ImagePicker();
+  XFile? image;
 
   void _getFromCamera() async {
     image =
@@ -49,6 +58,8 @@ class _WorkShopUpdatePartsConfirmScreenState
     image =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +74,7 @@ class _WorkShopUpdatePartsConfirmScreenState
         title: const Column(
           children: [
             Text(
-              "Add Parts",
+              "Update Bike",
               style: TextStyle(fontSize: 25),
             ),
             Icon(Icons.tv_sharp)
@@ -200,8 +211,8 @@ class _WorkShopUpdatePartsConfirmScreenState
                           ),
                           CustomTextField(
                               borderColor: Colors.white,
-                              controller: _partName,
-                              hintText: "Enter partname"),
+                              controller: _bikeNameController,
+                              hintText: "Enter bike name"),
                           const SizedBox(
                             height: 10,
                           ),
@@ -211,25 +222,35 @@ class _WorkShopUpdatePartsConfirmScreenState
                           ),
                           CustomTextField(
                               borderColor: Colors.white,
-                              controller: _qty,
+                              controller: _qtyController,
                               hintText: "Enter quantity"),
                           const SizedBox(
                             height: 10,
                           ),
                           const Text(
-                            "Price",
+                            "Milage",
                             style: TextStyle(fontSize: 15),
                           ),
                           CustomTextField(
                             borderColor: Colors.white,
-                            controller: _rate,
-                            hintText: "Enter price",
+                            controller: _milageController,
+                            hintText: "Enter milage ",
+                          ),
+
+                          const Text(
+                            "Rate per day",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          CustomTextField(
+                            borderColor: Colors.white,
+                            controller: _rate_per_day,
+                            hintText: "Enter rent",
                           ),
                           const SizedBox(
                             height: 10,
                           ),
                           TextField(
-                            controller: _description,
+                            controller: _descriptionController,
                             minLines: 6,
                             maxLines: 200,
                             decoration: const InputDecoration(
@@ -257,16 +278,19 @@ class _WorkShopUpdatePartsConfirmScreenState
                                   loading = true;
                                 });
 
-                                await ApiService().updateParts(
-                                  partsId: widget.details['_id'],
-                                  context: context,
-                                  partname: _partName.text,
-                                  quantity: _qty.text,
-                                  price: _rate.text,
-                                  description: _description.text,
-                                  image:
-                                      image != null ? File(image!.path) : null,
-                                );
+                               
+                                  await ApiService().updateBikeInWorkshop(
+                                    context: context,
+                                    id: widget.details['_id'],
+                                    bikeName: _bikeNameController.text,
+                                    ratePerDay: double.parse(_rate_per_day.text),
+                                    milage: double.parse(_milageController.text),
+                                    quantity: int.parse(_qtyController.text),
+                                    description: _descriptionController.text,
+                                    imagePath: image != null ? image!.path : null
+
+                                    );
+                               
 
                                 setState(() {
                                   loading = false;

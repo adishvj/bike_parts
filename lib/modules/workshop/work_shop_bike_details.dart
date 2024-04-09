@@ -8,7 +8,7 @@ class WorkShopBikeScreen extends StatefulWidget {
   const WorkShopBikeScreen(
       {super.key, required this.image, required this.details});
 
-  final String image;
+  final String ? image;
   final Map<String, dynamic> details;
 
   @override
@@ -31,8 +31,11 @@ class _WorkShopBikeScreenState extends State<WorkShopBikeScreen> {
         child: Column(
           children: [
             Expanded(
-                child: Image(
-              image: NetworkImage(widget.image),
+                child: widget.image == null ? Image(
+              image:  AssetImage('assets/images/bike.jpeg'),
+              fit: BoxFit.fill,
+            )  : Image(
+              image:  NetworkImage(widget.image!),
               fit: BoxFit.fill,
             )),
             Expanded(
@@ -119,43 +122,50 @@ class _WorkShopBikeScreenState extends State<WorkShopBikeScreen> {
                                   width: MediaQuery.of(context).size.width,
                                   child: Row(
                                     children: [
-                                      CustomButton(
-                                        text: 'Update',
-                                        color: Colors.amber,
-                                        onPressed: () async {
-                                          setState(() {
-                                            loading = false;
-                                          });
-
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    WorkShopUpdatePartsConfirmScreen(
-                                                  details: widget.details,
-                                                ),
-                                              ));
-
-                                          setState(() {
-                                            loading = false;
-                                          });
-                                        },
+                                      Expanded(
+                                        child: CustomButton(
+                                          text: 'Update',
+                                          color: Colors.amber,
+                                          onPressed: () async {
+                                            setState(() {
+                                              loading = false;
+                                            });
+                                      
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      WorkShopUpdatePartsConfirmScreen(
+                                                    details: widget.details,
+                                                  ),
+                                                ));
+                                      
+                                            setState(() {
+                                              loading = false;
+                                            });
+                                          },
+                                        ),
                                       ),
-                                      CustomButton(
-                                        text: 'Delete',
-                                        color: Colors.amber,
-                                        onPressed: () async {
-                                          setState(() {
-                                            loading = false;
-                                          });
+                                      const SizedBox(width: 10,),
+                                      Expanded(
+                                        child: CustomButton(
+                                          text: 'Delete',
+                                          color: Colors.amber,
+                                          onPressed: () async {
+                                            setState(() {
+                                              loading = false;
+                                            });
+                                      
+                                            await ApiService().deleteBike(
+                                                context, widget.details['_id']);
 
-                                          await ApiService().deleteBike(
-                                              context, widget.details['_id']);
-
-                                          setState(() {
-                                            loading = false;
-                                          });
-                                        },
+                                            
+                                      
+                                            setState(() {
+                                              loading = false;
+                                            });
+                                          },
+                                        ),
                                       ),
                                     ],
                                   ),

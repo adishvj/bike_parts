@@ -10,14 +10,16 @@ class WorkshopViewAllMechanicsScreen extends StatefulWidget {
   const WorkshopViewAllMechanicsScreen({Key? key}) : super(key: key);
 
   @override
-  State<WorkshopViewAllMechanicsScreen> createState() => _WorkshopViewAllMechanicsScreenState();
+  State<WorkshopViewAllMechanicsScreen> createState() =>
+      _WorkshopViewAllMechanicsScreenState();
 }
 
-class _WorkshopViewAllMechanicsScreenState extends State<WorkshopViewAllMechanicsScreen> {
+class _WorkshopViewAllMechanicsScreenState
+    extends State<WorkshopViewAllMechanicsScreen> {
   Future<List<dynamic>> fetchWorkshopMechanics(String workshopId) async {
     final response = await http.get(
       Uri.parse(
-          '${ApiService.baseUrl}/api/register/workshop-view-all-registered-mechanics/$workshopId'),
+          '${ApiService.baseUrl}/api/register/workshop-view-all-registered-mechanics/${DbService.getWorkshopId()}'),
     );
 
     if (response.statusCode == 200) {
@@ -37,7 +39,10 @@ class _WorkshopViewAllMechanicsScreenState extends State<WorkshopViewAllMechanic
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.amber,
+          elevation: 0,
           title: Text('Workshop Mechanics'),
           bottom: TabBar(
             tabs: [
@@ -48,18 +53,20 @@ class _WorkshopViewAllMechanicsScreenState extends State<WorkshopViewAllMechanic
         ),
         body: TabBarView(
           children: [
-            _buildMechanicsList(context, 'your_workshop_id_here', 'pending'),
-            _buildMechanicsList(context, 'your_workshop_id_here', 'accepted'),
+            _buildMechanicsList(context, DbService.getWorkshopId()!, '0'),
+            _buildMechanicsList(
+                context, DbService.getWorkshopId()!, '1'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMechanicsList(BuildContext context, String workshopId, String status) {
+  Widget _buildMechanicsList(
+      BuildContext context, String workshopId, String status) {
     return FutureBuilder(
       future: fetchWorkshopMechanics(workshopId),
-      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+      builder: (context, AsyncSnapshot<List<dynamic>> snapshot,) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
@@ -67,97 +74,82 @@ class _WorkshopViewAllMechanicsScreenState extends State<WorkshopViewAllMechanic
         } else {
           List<dynamic> mechanicsList = snapshot.data!;
           // Filter mechanics based on status
-          List<dynamic> filteredMechanics = mechanicsList.where((mechanic) => mechanic['status'] == status).toList();
-          return GridView.count(
-            scrollDirection: Axis.vertical,
-            crossAxisCount: 2,
-            childAspectRatio: .55,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 10,
+                     mechanicsList = mechanicsList.where((mechanic) => mechanic['status'] == status).toList();
+
+          return ListView(
             children: List.generate(
-              filteredMechanics.length,
+              mechanicsList.length,
               (index) => GestureDetector(
                 onTap: () {
                   // Navigate to mechanic details screen
                 },
                 child: Container(
-                  width: 150,
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  width: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     border: Border.all(color: Colors.black),
                   ),
-                  child: Column(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          filteredMechanics[index]['mechanic_image'],
-                          fit: BoxFit.fill,
-                          height: 120,
-                        ),
+                          borderRadius: BorderRadius.circular(20),
+                          child: Icon(
+                            Icons.person,
+                            size: 60,
+                          )),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            mechanicsList[index]['name'],
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Text(
+                            mechanicsList[index]['mobile'],
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              filteredMechanics[index]['mechanic_name'],
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                CustomButton(
-                                  text: 'Accept',
-                                  color: Colors.amber,
-                                  onPressed: () async{
-                                    setState(() {
-                                      
-                                    });
+                      Spacer(),
+                      CustomButton(
+                        text: 'Accept',
+                        color: Colors.amber,
+                        onPressed: () async {
+                          setState(() {});
 
-                                    await ApiService().approveMechanic(context, DbService.getLoginId()!);
+                          await ApiService().approveMechanic(
+                              context, mechanicsList[index]['login_id']);
 
-                                    
-                                    setState(() {
-                                      
-                                    });
-                                  },
-                                ),
-                                CustomButton(
-                                  text: 'Reject',
-                                  color: Colors.amber,
-                                  onPressed: ()  async{
+                          setState(() {});
+                        },
+                      ),
+                      SizedBox(width: 10,),
+                      CustomButton(
+                        text: 'Reject',
+                        color: Colors.amber,
+                        onPressed: () async {
+                          setState(() {});
 
-                                    setState(() {
-                                      
-                                    });
+                          await ApiService()
+                              .rejectMechanic(context, DbService.getLoginId()!);
 
-                                    await  ApiService().rejectMechanic(context, DbService.getLoginId()!);
-
-                                    setState(() {
-                                      
-                                    });
-                                    // Implement reject mechanic logic
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
+                          setState(() {});
+                          // Implement reject mechanic logic
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
                       ),
                     ],
                   ),

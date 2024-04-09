@@ -7,15 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
 class WorkShopRentBikesView extends StatelessWidget {
   const WorkShopRentBikesView({super.key});
 
   Future<List<dynamic>> _fetchBikes() async {
-    final response = await http.get(Uri.parse('${ApiService.baseUrl}/api/workshop/view-all-bikes/${DbService.getLoginId()!}'));
-    if (response.statusCode == 200) {
+    final response = await http.get(Uri.parse(
+        '${ApiService.baseUrl}/api/workshop/view-all-bike/${DbService.getWorkshopId()!}'));
 
-      print(response.body);
+    print(response.body);
+
+    if (response.statusCode == 200) {
       return json.decode(response.body)["data"];
     } else {
       throw Exception('Failed to load bikes');
@@ -38,13 +39,20 @@ class WorkShopRentBikesView extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             List<dynamic> bikes = snapshot.data!;
+            print('bikes$bikes');
             return ListView.builder(
               itemCount: bikes.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(bikes[index]['bike_image'][0]),
-                  ),
+                  leading: bikes[index]['bike_image'].length == 0
+                      ? CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/bike.jpeg'),
+                        )
+                      : CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(bikes[index]['bike_image'][0]),
+                        ),
                   title: Center(
                     child: Text(bikes[index]['bike_name']),
                   ),
@@ -55,7 +63,9 @@ class WorkShopRentBikesView extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => WorkShopBikeScreen(
-                            image: bikes[index]['bike_image'][0],
+                            image: bikes[index]['bike_image'].length == 0
+                                ? null
+                                : bikes[index]['bike_image'][0],
                             details: bikes[index],
                           ),
                         ),
