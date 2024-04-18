@@ -158,6 +158,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (role == 3) {
         if(context.mounted){
+           ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(
+          content: Text("Success"),
+        ),
+      );
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -169,7 +174,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (role == 1) {
 
+
          if(context.mounted){
+           ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(
+          content: Text("Success"),
+        ),
+      );
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -182,6 +193,11 @@ class _LoginScreenState extends State<LoginScreen> {
       if(role == 2){
 
         if(context.mounted){
+          ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(
+          content: Text("Success"),
+        ),
+      );
 
           Navigator.pushAndRemoveUntil(
             context,
@@ -192,6 +208,16 @@ class _LoginScreenState extends State<LoginScreen> {
         }
 
 
+      }
+
+      if(role == 0){
+
+         // Handle successful response
+      ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(
+          content: Text("waiting for admin approvel"),
+        ),
+      );
       }
 
       setState(() {

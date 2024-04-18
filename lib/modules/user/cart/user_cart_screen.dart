@@ -38,11 +38,11 @@ class _UserCartScreenState extends State<UserCartScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('No data'));
           } else {
             List<dynamic> cartItems = snapshot.data!['data'] as List<dynamic>;
 
-            print('cartItems');
+           
             return Column(
               children: [
                 Expanded(
@@ -84,9 +84,9 @@ class _UserCartScreenState extends State<UserCartScreen> {
                                   loginId: DbService.getLoginId()!,
                                   partsId: cartItems[index]['parts_id'],
                                   quantity:
-                                      int.parse(cartItems[index]['quantity']) +
+                                      cartItems[index]['quantity']+
                                           1,
-                                  price: '10');
+                                  price: cartItems[index]['rate'].toString());
 
                               setState(() {});
                             },
@@ -105,7 +105,7 @@ class _UserCartScreenState extends State<UserCartScreen> {
                                   loginId: DbService.getLoginId()!,
                                   partsId: cartItems[index]['_id'],
                                   quantity:
-                                      int.parse(cartItems[index]['quantity']) -
+                                      cartItems[index]['quantity'] -
                                           1,
                                   price: cartItems[index]['rate']);
 

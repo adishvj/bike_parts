@@ -3,6 +3,7 @@ import 'package:bike_parts/modules/user/checkout/user_order_confirmed.dart';
 import 'package:bike_parts/services/api_service.dart';
 import 'package:bike_parts/services/db_service.dart';
 import 'package:bike_parts/widgets/custom_button.dart';
+import 'package:bike_parts/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 class CheckOut extends StatefulWidget {
@@ -96,6 +97,10 @@ class _CheckOutState extends State<CheckOut> {
                       const SizedBox(
                         height: 16,
                       ),
+
+                      CustomTextField(
+                        borderColor: Colors.grey,
+                        hintText: 'Add address', controller: TextEditingController()),
 
                       // standard Delivery
 
@@ -216,7 +221,7 @@ class _CheckOutState extends State<CheckOut> {
                                             fontSize: 12),
                                       ),
                                       Text(
-                                        '3280',
+                                        '0',
                                         style: TextStyle(
                                             color: Colors.teal.shade300,
                                             fontSize: 12),
@@ -224,28 +229,8 @@ class _CheckOutState extends State<CheckOut> {
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 0, vertical: 3),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        "Tax",
-                                        style: TextStyle(
-                                            color: Colors.grey.shade700,
-                                            fontSize: 12),
-                                      ),
-                                      Text(
-                                        '96',
-                                        style: TextStyle(
-                                            color: Colors.grey.shade700,
-                                            fontSize: 12),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                           
+                               
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 0, vertical: 3),
@@ -303,7 +288,7 @@ class _CheckOutState extends State<CheckOut> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                const Row(
+                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -314,7 +299,7 @@ class _CheckOutState extends State<CheckOut> {
                                           color: Colors.black, fontSize: 12),
                                     ),
                                     Text(
-                                      '2013',
+                                      widget.totalAmount,
                                       style: TextStyle(
                                           color: Colors.black, fontSize: 12),
                                     )

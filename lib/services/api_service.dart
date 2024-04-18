@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bike_parts/modules/auth/login_screen.dart';
 import 'package:bike_parts/modules/auth/workshop_reg.dart';
+import 'package:bike_parts/modules/user/cart/user_cart_screen.dart';
 import 'package:bike_parts/modules/user/user_root_screen.dart';
 import 'package:bike_parts/modules/workshop/workshop_home_screen.dart';
 import 'package:bike_parts/modules/workshop/workshop_view_all_bikes.dart';
@@ -163,6 +164,8 @@ class ApiService {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
 
+      print(response.body);
+
       if (data['success'] == true) {
         DbService.setLoginId(data['loginId']);
 
@@ -174,12 +177,7 @@ class ApiService {
         }
       }
 
-      // Handle successful response
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login successful'),
-        ),
-      );
+     
       return jsonDecode(response.body)['userRole'] ?? 0;
     } else {
       // Handle error response
@@ -365,7 +363,8 @@ class ApiService {
       {required String loginId,
       required String partId,
       required String price,
-      required BuildContext context}) async {
+      required BuildContext context
+      }) async {
     final url =
         Uri.parse('$baseUrl/api/user/add-parts-to-cart/$loginId/$partId');
 
@@ -384,7 +383,10 @@ class ApiService {
         print(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(responseData['message']),
+            content: Text('Added to cart'),
+            action: SnackBarAction(label: 'go to cart', onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => UserCartScreen(),));
+            },),
           ),
         );
       } else {
@@ -465,6 +467,12 @@ class ApiService {
 
     try {
       var response = await http.post(Uri.parse(url), body: body);
+
+
+      print(body);
+      print(response.body);
+
+
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
