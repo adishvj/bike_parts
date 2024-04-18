@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bike_parts/modules/auth/login_screen.dart';
+import 'package:bike_parts/modules/auth/workshop_reg.dart';
 import 'package:bike_parts/modules/user/user_root_screen.dart';
+import 'package:bike_parts/modules/workshop/workshop_home_screen.dart';
+import 'package:bike_parts/modules/workshop/workshop_view_all_bikes.dart';
 import 'package:bike_parts/services/db_service.dart';
 import 'package:bike_parts/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +32,7 @@ class ApiService {
       });
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Success'),
         ));
         Navigator.pushAndRemoveUntil(
@@ -61,8 +64,11 @@ class ApiService {
       required String address}) async {
     try {
       var url = Uri.parse('$baseUrl/api/register/workshop');
+
+      
+
       var response = await http.post(url, body: {
-        'name': name,
+        'workshop_name': name,
         'email': email,
         'mobile': phone,
         'address': address,
@@ -70,7 +76,7 @@ class ApiService {
       });
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Success'),
         ));
 
@@ -115,7 +121,7 @@ class ApiService {
       });
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Success'),
         ));
 
@@ -163,6 +169,9 @@ class ApiService {
         if (data['userRole'] == 2) {
           DbService.setWorkShopId(data['workshopId']);
         }
+        if (data['userRole'] == 1) {
+          DbService.setWorkShopId(data['workshopId']);
+        }
       }
 
       // Handle successful response
@@ -184,13 +193,16 @@ class ApiService {
   }
 
 //add  parts
-  Future<void> addParts(
-      {required BuildContext context,
-      required String partname,
-      required String quantity,
-      required String price,
-      required String description,
-      required File image}) async {
+  Future<void> addParts({
+
+    required BuildContext context,
+    required String partname, 
+    required String quantity,
+    required String price,
+    required String description,
+    required File image
+    
+    }) async {
     // Show loading snack bar
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -221,6 +233,7 @@ class ApiService {
     request.fields['workshop_id'] = DbService.getWorkshopId()!;
     request.fields['description'] = description;
 
+
     var imageFile = await http.MultipartFile.fromPath('image', image.path);
 
     request.files.add(imageFile);
@@ -237,6 +250,8 @@ class ApiService {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
       if (response.statusCode == 200) {
+
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('successfull'),
@@ -265,7 +280,7 @@ class ApiService {
 //add  parts
   Future<void> updateParts(
       {required BuildContext context,
-      required String partsId,
+       required String  partsId,
       String? partname,
       String? quantity,
       String? price,
@@ -319,6 +334,8 @@ class ApiService {
           const SnackBar(
             content: Text('successfull'),
           ),
+
+         
         );
 
         Navigator.pop(context);
@@ -390,7 +407,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Cart deleted successfully'),
           ),
         );
@@ -418,7 +435,7 @@ class ApiService {
       if (response.statusCode == 200) {
         print(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Parts ordered successfully'),
           ),
         );
@@ -451,7 +468,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Cart quantity updated successfully'),
           ),
         );
@@ -493,7 +510,7 @@ class ApiService {
       if (response.statusCode == 200) {
         // Successful POST request
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Bike booked successfully!'),
           ),
         );
@@ -550,122 +567,256 @@ class ApiService {
     }
   }
 
-  Future<void> updateMechanicProfile(
-      {required BuildContext context,
-      required String loginId,
-      required String name,
-      required String phone,
-      required String qualification}) async {
-    final url =
-        Uri.parse('$baseUrl/api/mechanic/update-mechanic-profile/$loginId');
 
-    try {
-      final response = await http.post(url, body: {
-        'name': name,
+Future<void> updateMechanicProfile({required BuildContext context,
+required String loginId,required String name,required String phone,required String qualification}) async {
+  final url = Uri.parse('$baseUrl/api/mechanic/update-mechanic-profile/$loginId');
+  
+  try {
+    final response = await http.post(
+      url,
+      body: {
+        'name' : name,
         'mobile': phone,
         'qualification': qualification
-      });
 
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Success'),
-          ),
-        );
-      } else {
-        throw Exception(
-            'Failed to update profile. Status code: ${response.statusCode}');
+
+
       }
-    } catch (e) {
+    );
+
+    if (response.statusCode == 200) {
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: $e'),
-        ),
-      );
+      const SnackBar(
+        content: Text('Success'),
+      ),
+    );
+
+
+    } else {
+      throw Exception('Failed to update profile. Status code: ${response.statusCode}');
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Error: $e'),
+      ),
+    );
   }
+}
 
-  Future<void> approveMechanic(BuildContext context, String loginId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/api/register/approve-mechanic/$loginId'),
-      );
+Future<void> approveMechanic(BuildContext context, String loginId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/register/approve-mechanic/$loginId'),
+    );
 
-      if (response.statusCode == 200) {
-        // Request was successful
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Mechanic approved successfully'),
-          backgroundColor: Colors.green,
-        ));
-      } else {
-        // Request failed
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to approve mechanic: ${response.statusCode}'),
-          backgroundColor: Colors.red,
-        ));
-      }
-    } catch (e) {
-      // An error occurred
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      // Request was successful
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Mechanic approved successfully'),
+        backgroundColor: Colors.green,
+      ));
+    } else {
+      // Request failed
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('An error occurred: $e'),
+        content: Text('Failed to approve mechanic: ${response.statusCode}'),
         backgroundColor: Colors.red,
       ));
     }
+  } catch (e) {
+    // An error occurred
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('An error occurred: $e'),
+      backgroundColor: Colors.red,
+    ));
   }
+}
 
-  Future<void> rejectMechanic(BuildContext context, String loginId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('${baseUrl}m/api/register/reject-mechanic/$loginId'),
-      );
 
-      if (response.statusCode == 200) {
-        // Request was successful
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Mechanic rejected successfully'),
-          backgroundColor: Colors.green,
-        ));
-      } else {
-        // Request failed
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to reject mechanic: ${response.statusCode}'),
-          backgroundColor: Colors.red,
-        ));
-      }
-    } catch (e) {
-      // An error occurred
+Future<void> rejectMechanic(BuildContext context, String loginId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('${baseUrl}m/api/register/reject-mechanic/$loginId'),
+    );
+
+    if (response.statusCode == 200) {
+      // Request was successful
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Mechanic rejected successfully'),
+        backgroundColor: Colors.green,
+      ));
+    } else {
+      // Request failed
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('An error occurred: $e'),
+        content: Text('Failed to reject mechanic: ${response.statusCode}'),
         backgroundColor: Colors.red,
       ));
     }
+  } catch (e) {
+    // An error occurred
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('An error occurred: $e'),
+      backgroundColor: Colors.red,
+    ));
   }
+}
 
-  Future<void> deleteBike(BuildContext context, String bikeId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/api/workshop/delete-bike/$bikeId'),
-      );
 
-      if (response.statusCode == 200) {
-        // Request was successful
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Bike deleted successfully'),
-          backgroundColor: Colors.green,
-        ));
-      } else {
-        // Request failed
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to delete bike: ${response.statusCode}'),
-          backgroundColor: Colors.red,
-        ));
-      }
-    } catch (e) {
-      // An error occurred
+Future<void> deleteBike(BuildContext context, String bikeId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/workshop/delete-bike/$bikeId'),
+    );
+
+    if (response.statusCode == 200) {
+      // Request was successful
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Bike deleted successfully'),
+        backgroundColor: Colors.green,
+
+
+      ));
+
+       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const WorkShopRentBikesView(),));
+    } else {
+      // Request failed
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('An error occurred: $e'),
+        content: Text('Failed to delete bike: ${response.statusCode}'),
         backgroundColor: Colors.red,
       ));
     }
+  } catch (e) {
+    // An error occurred
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('An error occurred: $e'),
+      backgroundColor: Colors.red,
+    ));
   }
-} //close
+}
+
+Future<void> addBikeToWorkshop({
+  required BuildContext context,
+  required String workshopId,
+  required String bikeName,
+  required double ratePerDay,
+  required double milage,
+  required int quantity,
+  required String description,
+  String? imagePath,
+}) async {
+  final url = Uri.parse('$baseUrl/api/workshop/add-bike');
+  var request = http.MultipartRequest('POST', url);
+
+  request.fields['workshop_id'] = workshopId;
+  request.fields['bike_name'] = bikeName;
+  request.fields['rate_per_day'] = ratePerDay.toString();
+  request.fields['milage'] = milage.toString();
+  request.fields['quantity'] = quantity.toString();
+  request.fields['description'] = description;
+
+  if (imagePath != null) {
+    var image = await http.MultipartFile.fromPath('image', imagePath);
+    request.files.add(image);
+  }
+
+  var response = await http.Response.fromStream(await request.send());
+
+  if (response.statusCode == 200) {
+    showSnackbar(context, 'Bike added successfully');
+  } else {
+    showSnackbar(context, 'Failed to add bike. Please try again.');
+  }
+}
+
+
+Future<void> updateBikeInWorkshop({
+  required BuildContext context,
+  required String id,
+  required String bikeName,
+  required double ratePerDay,
+  required double milage,
+  required int quantity,
+  required String description,
+  required String ? imagePath,
+}) async {
+  final url = Uri.parse('$baseUrl/api/workshop/update-bike/$id');
+
+  try {
+    var request = http.MultipartRequest('POST', url);
+
+    request.fields['bike_name'] = bikeName;
+    request.fields['rate_per_day'] = ratePerDay.toString();
+    request.fields['milage'] = milage.toString();
+    request.fields['quantity'] = quantity.toString();
+    request.fields['description'] = description;
+
+    if(imagePath != null){
+      var image = await http.MultipartFile.fromPath('image', imagePath);
+    request.files.add(image);
+    }
+
+    var response = await http.Response.fromStream(await request.send());
+
+    if (response.statusCode == 200) {
+      showSnackbar(context, 'Bike updated successfully');
+    } else {
+      showSnackbar(context, 'Failed to update bike. Please try again.');
+    }
+  } catch (e) {
+    showSnackbar(context, 'An error occurred: $e');
+  }
+}
+
+
+Future<void> updateWorkshopProfile({
+    required String workshopName,
+    required String mobile,
+    required String address,
+    required BuildContext context,
+  }) async {
+    String url = '$baseUrl/api/workshop/update-workshop-profile/${DbService.getLoginId()}';
+
+    Map<String, dynamic> body = {
+      'workshop_name': workshopName,
+      'mobile': mobile,
+      'address': address,
+    };
+
+    var response = await http.post(Uri.parse(url), body: body);
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Workshop profile updated successfully'),
+      ));
+
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => WorkShopHomeScreen(),), (route) => false);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to update workshop profile'),
+      ));
+
+
+    }
+  }
+
+void showSnackbar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 2),
+    ),
+  );
+}
+
+
+
+
+
+
+
+
+}//close
