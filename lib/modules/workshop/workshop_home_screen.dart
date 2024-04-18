@@ -1,5 +1,6 @@
 import 'package:bike_parts/modules/auth/login_screen.dart';
 import 'package:bike_parts/modules/workshop/profile/work_shop_profile.dart';
+import 'package:bike_parts/modules/workshop/work_shop_all_bike_bookings.dart';
 import 'package:bike_parts/modules/workshop/workshop_add_bike.dart';
 import 'package:bike_parts/modules/workshop/workshop_view_all_bikes.dart';
 import 'package:bike_parts/modules/workshop/workshop_view_all_mech.dart';
@@ -166,6 +167,38 @@ bool loading = false;
                         ),
                       ),
                     ),
+
+
+                      GestureDetector(
+                      onTap: () {
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => WorkshopViewAllBookingsScreen(),));
+                      
+                        // Add your navigation logic here
+                      },
+                      child: Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15)
+                        ),
+                        child: GridTile(
+                          footer: Container(
+                            color:  KButtonColor,
+                            padding: const EdgeInsets.all(12),
+                            child: const Text(
+                              'Bike bookings', // Name of the item
+                              style: TextStyle(color: Colors.black),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          child: Image.asset(
+                            'assets/images/bikes.jpeg',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+
                    
                    GestureDetector(
                       onTap: () {

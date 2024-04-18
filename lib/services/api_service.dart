@@ -505,7 +505,7 @@ class ApiService {
       'bike_name': data['bike_name'],
       'rate_per_day': data['rate_per_day'],
       'milage': data['milage'],
-      'quantity': data['quantity'],
+      'quantity': '1',
       'description': data['description'],
       'image': data['bike_image'][0],
     };
@@ -734,6 +734,8 @@ Future<void> addBikeToWorkshop({
   var response = await http.Response.fromStream(await request.send());
 
   if (response.statusCode == 200) {
+
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => WorkShopHomeScreen(),), (route) => false);
     showSnackbar(context, 'Bike added successfully');
   } else {
     showSnackbar(context, 'Failed to add bike. Please try again.');

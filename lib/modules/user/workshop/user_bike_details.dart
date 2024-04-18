@@ -113,7 +113,10 @@ class _UserBikeScreenState extends State<UserBikeScreen> {
                                   loading = false;
                                 });
 
-                                await ApiService().bookBike(context: context, data: widget.details);
+                                await ApiService().bookBike(
+                                  context: context,
+                                  data: widget.details
+                                  );
 
                                 setState(() {
                                   loading = false;

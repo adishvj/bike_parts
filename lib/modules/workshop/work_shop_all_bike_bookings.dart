@@ -6,20 +6,20 @@ import 'package:bike_parts/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class WorkshopViewAllMechanicsScreen extends StatefulWidget {
-  const WorkshopViewAllMechanicsScreen({Key? key}) : super(key: key);
+class WorkshopViewAllBookingsScreen extends StatefulWidget {
+  const WorkshopViewAllBookingsScreen({Key? key}) : super(key: key);
 
   @override
-  State<WorkshopViewAllMechanicsScreen> createState() =>
-      _WorkshopViewAllMechanicsScreenState();
+  State<WorkshopViewAllBookingsScreen> createState() =>
+      _WorkshopViewAllBookingsScreenState();
 }
 
-class _WorkshopViewAllMechanicsScreenState
-    extends State<WorkshopViewAllMechanicsScreen> {
+class _WorkshopViewAllBookingsScreenState
+    extends State<WorkshopViewAllBookingsScreen> {
   Future<List<dynamic>> fetchWorkshopMechanics(String workshopId) async {
     final response = await http.get(
       Uri.parse(
-          '${ApiService.baseUrl}/api/register/workshop-view-all-registered-mechanics/${DbService.getWorkshopId()}'),
+          '${ApiService.baseUrl}/api/workshop/view-all-bike/booking/${DbService.getWorkshopId()}'),
     );
 
     if (response.statusCode == 200) {

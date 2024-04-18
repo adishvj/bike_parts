@@ -19,11 +19,12 @@ class _UserBookingListState extends State<UserBookingList> {
   @override
   void initState() {
     super.initState();
-    futureDocServiceList = _fetchBookings();
+    futureDocServiceList = _fetchOrders();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(DbService.getLoginId()!);
     return DefaultTabController(
       length: 1,
       child: Scaffold(
@@ -158,7 +159,7 @@ class _UserBookingListState extends State<UserBookingList> {
             //     })
 
             FutureBuilder<List<dynamic>>(
-              future: _fetchBookings(),
+              future: _fetchOrders(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
@@ -179,7 +180,15 @@ class _UserBookingListState extends State<UserBookingList> {
                           ),
                           child: ListTile(
                             leading: const Icon(Icons.event),
-                            title: Text('Date ${booking["date"]}'),
+                            title: Text('Name: ${booking["part_name"]}'),
+                            trailing: Text('${booking["status"]}',style: TextStyle(color: Colors.red),),
+                            subtitle:Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('qty:${booking["quantity"]}'),
+                                Text('workshop: ${booking["workshop_name"]}')
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -194,10 +203,10 @@ class _UserBookingListState extends State<UserBookingList> {
     );
   }
 
-  Future<List<dynamic>> _fetchBookings() async {
+  Future<List<dynamic>> _fetchOrders() async {
     print(DbService.getLoginId());
     final response = await http.get(Uri.parse(
-        '${ApiService.baseUrl}/api/user/view-all-bike-booking/${DbService.getLoginId()}'));
+        '${ApiService.baseUrl}/api/mechanic/view-orders/${DbService.getLoginId()}'));
 
     print('gggggggggggggggggggggggggggggggggg');
     print(response.body);

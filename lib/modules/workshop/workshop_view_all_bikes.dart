@@ -36,7 +36,7 @@ class WorkShopRentBikesView extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('No data'));
           } else {
             List<dynamic> bikes = snapshot.data!;
             print('bikes$bikes');
@@ -59,7 +59,7 @@ class WorkShopRentBikesView extends StatelessWidget {
                   trailing: CustomButton(
                     text: 'View',
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => WorkShopBikeScreen(
