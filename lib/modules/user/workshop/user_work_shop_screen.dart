@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bike_parts/modules/user/workshop/user_work_shop_details.dart';
 import 'package:bike_parts/services/api_service.dart';
+import 'package:bike_parts/services/db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -130,6 +131,40 @@ class _UserWorkShopScreenState extends State<UserWorkShopScreen> {
                                         ),
                                       ),
                                     ),
+                                 
+                                 SizedBox(height: 10,),
+                                   GestureDetector(
+                                      onTap: () {
+
+                                        addReview(
+                                          context, 
+                                          DbService.getLoginId()!,
+                                          workshop['_id']  
+                                          );
+
+
+                                        
+                                       
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        color: const Color(0xffF7C910),
+                                        padding: const EdgeInsets.all(8),
+                                        alignment: Alignment.center,
+                                        child: const Text(
+                                          'Add Review',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                 
+                                 
+                                 
                                   ],
                                 ),
                               ),
@@ -147,4 +182,88 @@ class _UserWorkShopScreenState extends State<UserWorkShopScreen> {
       ),
     );
   }
+
+
+
+
+  Future<void> addReview(BuildContext context, String loginId, String workshopId) async {
+  TextEditingController reviewController = TextEditingController();
+
+  bool load = false;
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Add Review'),
+        content: load == true ?  CircularProgressIndicator()  : SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              TextField(
+                controller: reviewController,
+                decoration: InputDecoration(labelText: 'Review'),
+                maxLines: 3,
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Submit'),
+            onPressed: () async {
+
+              setState(() {
+                load = true;
+              });
+             
+              String review = reviewController.text;
+              await postReview(context, loginId, workshopId, review);
+               Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+
+
+Future<void> postReview(BuildContext context, String loginId, String workshopId, String review) async {
+  final url = Uri.parse('https://vadakara-mca-bike-backend.onrender.com/api/user/add-review');
+
+  print('ggggg');
+  final response = await http.post(
+    url,
+    body: {
+      'login_id': loginId,
+      'workshop_id': workshopId,
+      'review': review,
+    },
+  );
+
+  if (response.statusCode == 200) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Review added successfully')),
+    );
+    // Handle the response data if needed
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to add review. Status code: ${response.statusCode}')),
+    );
+    // Handle the error
+  }
+}
+
+
+
+
+
 }

@@ -2,8 +2,10 @@ import 'package:bike_parts/modules/auth/login_screen.dart';
 import 'package:bike_parts/modules/workshop/profile/work_shop_profile.dart';
 import 'package:bike_parts/modules/workshop/work_shop_all_bike_bookings.dart';
 import 'package:bike_parts/modules/workshop/workshop_add_bike.dart';
+import 'package:bike_parts/modules/workshop/workshop_review_screen.dart';
 import 'package:bike_parts/modules/workshop/workshop_view_all_bikes.dart';
 import 'package:bike_parts/modules/workshop/workshop_view_all_mech.dart';
+import 'package:bike_parts/services/db_service.dart';
 import 'package:bike_parts/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -23,11 +25,14 @@ bool loading = false;
   
 @override
   void initState() {
+
+
     
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
+    print(DbService.getWorkshopId());
     return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(20),
@@ -192,14 +197,43 @@ bool loading = false;
                             ),
                           ),
                           child: Image.asset(
-                            'assets/images/bikes.jpeg',
+                            'assets/images/bike.jpeg',
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
                     ),
 
-                   
+                   GestureDetector(
+                      onTap: () {
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => WorkShopReviewScreen(),));
+                      
+                        // Add your navigation logic here
+                      },
+                      child: Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15)
+                        ),
+                        child: GridTile(
+                          footer: Container(
+                            color:  KButtonColor,
+                            padding: const EdgeInsets.all(12),
+                            child: const Text(
+                              'Reviews', // Name of the item
+                              style: TextStyle(color: Colors.black),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          child: Image.network(
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZCKQ97MaMybGx9viwaDq41qUtf3yB1Z2EIAY1Sb8o5VhmaVpsuVRdqnzVxrAnbkm7fWA&usqp=CAU',
+                           
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
                    GestureDetector(
                       onTap: () {
 

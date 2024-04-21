@@ -74,7 +74,7 @@ class _PopularWorkWidgetState extends State<PopularWorkWidget> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.network(
-                                partList[0],
+                                                'https://img.freepik.com/free-photo/mechanic-repairing-bicycle_23-2148138617.jpg?w=1380&t=st=1708497923~exp=1708498523~hmac=db0aa97cb4ebd6cb6b1a4e4f5a8da5d25d20e4a8be9b4bb5abeb10a7cbbcc7d0',
                                 fit: BoxFit.fill,
                               ),
                             ),

@@ -19,8 +19,11 @@ class _WorkshopViewAllBookingsScreenState
   Future<List<dynamic>> fetchWorkshopMechanics(String workshopId) async {
     final response = await http.get(
       Uri.parse(
-          '${ApiService.baseUrl}/api/workshop/view-all-bike/booking/${DbService.getWorkshopId()}'),
+          '${ApiService.baseUrl}/api/workshop/view-all-bike-booking/${DbService.getWorkshopId()}'),
     );
+
+    print(response.body);
+    print(response.statusCode);
 
     if (response.statusCode == 200) {
       // If the server returns a 200 OK response, parse the JSON
@@ -30,7 +33,7 @@ class _WorkshopViewAllBookingsScreenState
       return data;
     } else {
       // If the server returns an error response, throw an exception.
-      throw Exception('Failed to load workshop mechanics');
+      return [];
     }
   }
 
@@ -80,16 +83,11 @@ class _WorkshopViewAllBookingsScreenState
               .where((mechanic) => mechanic['status'] == status)
               .toList();
 
-          return ListView(
-            children: List.generate(
-              mechanicsList.length,
-              (index) => GestureDetector(
-                onTap: () {
-                  // Navigate to mechanic details screen
-                },
-                child: Container(
+          return mechanicsList.isEmpty
+              ? Container(
                   margin: EdgeInsets.symmetric(vertical: 10),
                   width: MediaQuery.of(context).size.width,
+                  height: 100,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
@@ -106,9 +104,10 @@ class _WorkshopViewAllBookingsScreenState
                           )),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            mechanicsList[index]['name'],
+                            'bike',
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               color: Colors.black,
@@ -116,7 +115,7 @@ class _WorkshopViewAllBookingsScreenState
                             ),
                           ),
                           Text(
-                            mechanicsList[index]['mobile'],
+                            '2345678',
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               color: Colors.black,
@@ -126,14 +125,14 @@ class _WorkshopViewAllBookingsScreenState
                         ],
                       ),
                       Spacer(),
+
+                      if(status != 1)
                       CustomButton(
                         text: 'Accept',
                         color: Colors.amber,
                         onPressed: () async {
-                          setState(() {});
-
-                          await ApiService().approveMechanic(
-                              context, mechanicsList[index]['login_id']);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Accepted')));
 
                           setState(() {});
                         },
@@ -141,14 +140,18 @@ class _WorkshopViewAllBookingsScreenState
                       SizedBox(
                         width: 10,
                       ),
+                      if(status != 1)
                       CustomButton(
                         text: 'Reject',
                         color: Colors.amber,
                         onPressed: () async {
                           setState(() {});
 
-                          await ApiService()
-                              .rejectMechanic(context, DbService.getLoginId()!);
+                          // await ApiService()
+                          //     .rejectMechanic(context, DbService.getLoginId()!);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Rejected')));
 
                           setState(() {});
                           // Implement reject mechanic logic
@@ -158,13 +161,146 @@ class _WorkshopViewAllBookingsScreenState
                         height: 10,
                       ),
                     ],
+                  ))
+              : ListView(
+                  children: List.generate(
+                    mechanicsList.length,
+                    (index) => GestureDetector(
+                      onTap: () {
+                        // Navigate to mechanic details screen
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Icon(
+                                  Icons.person,
+                                  size: 60,
+                                )),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  mechanicsList[index]['name'],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  mechanicsList[index]['mobile'],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Spacer(),
+                            CustomButton(
+                              text: 'Accept',
+                              color: Colors.amber,
+                              onPressed: () async {
+                                setState(() {});
+
+                                await acceptBikeBooking(
+                                    context, mechanicsList[index]['_id']);
+
+                                setState(() {});
+                              },
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            CustomButton(
+                              text: 'Reject',
+                              color: Colors.amber,
+                              onPressed: () async {
+                                setState(() {});
+
+                                rejectBooking(
+                                    context, mechanicsList[index]['_id']);
+
+                                setState(() {});
+                                // Implement reject mechanic logic
+                              },
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          );
+                );
         }
       },
     );
+  }
+
+  Future<void> acceptBikeBooking(BuildContext context, String bookingId) async {
+    final url = Uri.parse(
+        'https://vadakara-mca-bike-backend.onrender.com/api/workshop/accept-bike-booking/$bookingId');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Booking accepted successfully')),
+        );
+        // Handle the response data if needed
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Failed to accept booking. Status code: ${response.statusCode}')),
+        );
+        // Handle the error
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Exception while accepting booking: $e')),
+      );
+      // Handle the exception
+    }
+  }
+
+//reject booking
+
+  Future<void> rejectBooking(BuildContext context, String bookingId) async {
+    final url = Uri.parse(
+        'https://vadakara-mca-bike-backend.onrender.com/api/workshop/reject-bike-booking/$bookingId');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Booking accepted successfully')),
+        );
+        // Handle the response data if needed
+      } else {
+        throw Exception(
+            'Failed to accept booking. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Exception while accepting booking: $e')),
+      );
+      // Handle the exception
+    }
   }
 }

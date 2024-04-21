@@ -23,13 +23,13 @@ class _HomeScreenState extends State<HomeScreen> {
             elevation: 0,
             leading: IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>  UserSearchScreen(),
-                    ));
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) =>  UserSearchScreen(),
+                //     ));
               },
-              icon: const Icon(Icons.search),
+              icon: const Icon(Icons.two_wheeler),
             ),
             title: const Text(
               'Home',

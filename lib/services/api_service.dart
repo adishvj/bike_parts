@@ -499,7 +499,7 @@ class ApiService {
 
   Future<void> bookBike(
       {required BuildContext context, required Map data}) async {
-    String apiUrl = '$baseUrl/api/user/book-bike/${DbService.getLoginId()}';
+    String apiUrl = '$baseUrl/api/user/book-bike/';
 
     Map<String, dynamic> postData = {
       'bike_name': data['bike_name'],
