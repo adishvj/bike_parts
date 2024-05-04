@@ -489,18 +489,26 @@ class ApiService {
   }
 
   Future<void> bookBike(
-      {required BuildContext context, required Map data}) async {
+      {required BuildContext context,
+      required Map data,
+      required String pickup_date,
+      required String dropoff_date,
+      required String pickup_time,
+      required String bike_quantity}) async {
+    print("dj");
+
     String apiUrl = '$baseUrl/api/user/book-bike/${DbService.getLoginId()}';
 
     print(data);
+    print("dfc");
 
     Map<String, dynamic> postData = {
       'bike_id': data['_id'],
       'login_id': DbService.getLoginId(),
-      'pickup_date': '12/6/2024',
-      'dropoff_date': '12/6/2024',
-      'pickup_time': '5:89',
-      'bike_quantity': '1',
+      'pickup_date': pickup_date,
+      'dropoff_date': dropoff_date,
+      'pickup_time': pickup_time,
+      'bike_quantity': bike_quantity,
     };
 
     try {

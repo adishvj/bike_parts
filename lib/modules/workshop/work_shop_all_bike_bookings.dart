@@ -30,7 +30,6 @@ class _WorkshopViewAllBookingsScreenState
     if (response.statusCode == 200) {
       // If the server returns a 200 OK response, parse the JSON
       List<dynamic> data = jsonDecode(response.body)['data'];
-
       print(data);
       return data;
     } else {
@@ -60,7 +59,7 @@ class _WorkshopViewAllBookingsScreenState
           children: [
             _buildMechanicsList(context, DbService.getWorkshopId()!, 'pending'),
             _buildMechanicsList(
-                context, DbService.getWorkshopId()!, 'accepted'),
+                context, DbService.getWorkshopId()!, 'confirmed'),
           ],
         ),
       ),
@@ -86,84 +85,12 @@ class _WorkshopViewAllBookingsScreenState
               .where((mechanic) => mechanic['status'] == status)
               .toList();
 
+          print(mechanicsList);
+
           return mechanicsList.isEmpty
-              ? Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  width: MediaQuery.of(context).size.width,
-                  height: 100,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: Colors.black),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Icon(
-                            Icons.person,
-                            size: 60,
-                          )),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'bike',
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text(
-                            '2345678',
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      if (status != 1)
-                        CustomButton(
-                          text: 'Accept',
-                          color: Colors.amber,
-                          onPressed: () async {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Accepted')));
-
-                            setState(() {});
-                          },
-                        ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      if (status != 1)
-                        CustomButton(
-                          text: 'Reject',
-                          color: Colors.amber,
-                          onPressed: () async {
-                            setState(() {});
-
-                            // await ApiService()
-                            //     .rejectMechanic(context, DbService.getLoginId()!);
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Rejected')));
-
-                            setState(() {});
-                            // Implement reject mechanic logic
-                          },
-                        ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  ))
+              ? Center(
+                  child: Text('No bookings'),
+                )
               : ListView(
                   children: List.generate(
                     mechanicsList.length,
@@ -191,12 +118,16 @@ class _WorkshopViewAllBookingsScreenState
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  mechanicsList[index]['bike_name'],
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 4,
+                                  child: Text(
+                                    mechanicsList[index]['bike_name'],
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
                                 Text(
@@ -210,32 +141,32 @@ class _WorkshopViewAllBookingsScreenState
                               ],
                             ),
                             Spacer(),
-                            CustomButton(
-                              text: 'Accept',
-                              color: Colors.amber,
-                              onPressed: () async {
-                                print(mechanicsList[index]);
+                            if (status == 'pending')
+                              CustomButton(
+                                text: 'Accept',
+                                color: Colors.amber,
+                                onPressed: () async {
+                                  await acceptBikeBooking(
+                                      context, mechanicsList[index]['_id']);
 
-                                await acceptBikeBooking(
-                                    context, mechanicsList[index]['_id']);
-
-                                setState(() {});
-                              },
-                            ),
+                                  setState(() {});
+                                },
+                              ),
                             SizedBox(
                               width: 10,
                             ),
-                            CustomButton(
-                              text: 'Reject',
-                              color: Colors.amber,
-                              onPressed: () async {
-                                rejectBooking(
-                                    context, mechanicsList[index]['_id']);
+                            if (status == 'pending')
+                              CustomButton(
+                                text: 'Reject',
+                                color: Colors.amber,
+                                onPressed: () async {
+                                  rejectBooking(
+                                      context, mechanicsList[index]['_id']);
 
-                                setState(() {});
-                                // Implement reject mechanic logic
-                              },
-                            ),
+                                  setState(() {});
+                                  // Implement reject mechanic logic
+                                },
+                              ),
                             const SizedBox(
                               height: 10,
                             ),
@@ -258,6 +189,7 @@ class _WorkshopViewAllBookingsScreenState
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
+        print(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Booking accepted successfully')),
         );
@@ -281,15 +213,15 @@ class _WorkshopViewAllBookingsScreenState
 //reject booking
 
   Future<void> rejectBooking(BuildContext context, String bookingId) async {
+    print(bookingId);
     final url = Uri.parse(
         'https://vadakara-mca-bike-backend.onrender.com/api/workshop/reject-bike-booking/$bookingId');
-
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Booking accepted successfully')),
+          SnackBar(content: Text('Booking Rejected successfully')),
         );
         // Handle the response data if needed
       } else {
