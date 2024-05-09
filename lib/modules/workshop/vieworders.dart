@@ -54,13 +54,31 @@ class _WorkShopOrderscreenState extends State<WorkShopOrderscreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(review['user']['name'] ?? 'Anonymous',
+                        Text(review['part_name'] ?? 'Anonymous',
                             style: TextStyle(color: Colors.grey)),
                         Divider(
                           color: Colors.black,
                           endIndent: 10,
                         ),
-                        Text(review['review'] ?? 'No review'),
+                        Text("Quantity: ${review['quantity']}",
+                            style: TextStyle(color: Colors.grey)),
+
+                        Text("Rate: ${review['rate']}",
+                            style: TextStyle(color: Colors.grey)),
+
+                        Text("Subtotal: ${review['subtotal']}",
+                            style: TextStyle(color: Colors.grey)),
+
+                        Text("Status: ${review['status']}",
+                            style: TextStyle(color: Colors.grey)),
+                        SizedBox(height: 20.0),
+                        Image.network(
+                          review['parts_image'][0],
+                          width: 100,
+                          height: 100,
+                        ),
+
+                        // Text(review['review'] ?? 'No review'),
                       ],
                     ),
                   ),

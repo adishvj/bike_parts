@@ -47,7 +47,7 @@ class _WorkshopViewAllBookingsScreenState
         appBar: AppBar(
           backgroundColor: Colors.amber,
           elevation: 0,
-          title: Text('Workshop Mechanics'),
+          title: Text('Bike Bookings'),
           bottom: TabBar(
             tabs: [
               Tab(text: 'Pending'),
@@ -111,9 +111,10 @@ class _WorkshopViewAllBookingsScreenState
                           children: [
                             ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
-                                child: Icon(
-                                  Icons.person,
-                                  size: 60,
+                                child: Image.network(
+                                  mechanicsList[index]['bike_image'][0],
+                                  height: 50,
+                                  width: 50,
                                 )),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,6 +133,22 @@ class _WorkshopViewAllBookingsScreenState
                                 ),
                                 Text(
                                   mechanicsList[index]['pickup_date'],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  mechanicsList[index]['dropoff_date'],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  mechanicsList[index]['pickup_time'],
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     color: Colors.black,

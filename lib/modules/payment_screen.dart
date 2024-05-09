@@ -1,12 +1,14 @@
 import 'package:bike_parts/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
-
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key, this.totalAmount,});
+  const PaymentScreen({
+    super.key,
+    this.totalAmount,
+  });
 
-  final String  ? totalAmount;
-  
+  final String? totalAmount;
+
   @override
   // ignore: library_private_types_in_public_api
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -37,12 +39,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop(true);
-                    
-                  
 
-                    print('ddd')
-;
-                    
+                    print('ddd');
                   },
                   child: const Text('Submit'),
                 ),
@@ -70,7 +68,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop(true);
-                    
+
                     // Add your logic here to handle the card details
                   },
                   child: const Text('Submit'),
@@ -85,10 +83,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop(true);
-
-                   
-                    
-                    
                   },
                   child: const Text('OK'),
                 ),
@@ -138,20 +132,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             const SizedBox(height: 16.0),
             const Spacer(),
-           
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Total:',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.bold),),
-                Text(widget.totalAmount??'ffff'),
-                
+                const Text(
+                  'Total:',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(widget.totalAmount ?? '6000'),
               ],
-
             ),
-            
             Container(
-              padding: const
-               EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               width: MediaQuery.of(context).size.width,
               child: CustomButton(
                 onPressed: _handleAddPayment,
